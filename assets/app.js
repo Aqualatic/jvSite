@@ -213,6 +213,15 @@ function wireListingData(listing) {
   refreshRatings();
   refreshComments();
 
+  // Keep numbers fresh for other users' votes (simple polling).
+  // (Realtime is possible too, but polling is the simplest + most reliable setup.)
+  const ratingsPollMs = 7000;
+  setInterval(() => {
+    // Avoid pointless background churn.
+    if (document.hidden) return;
+    refreshRatings();
+  }, ratingsPollMs);
+
   [likeBtn, dislikeBtn].forEach((btn) => {
     btn.addEventListener('click', async () => {
       const type = btn.dataset.type;
