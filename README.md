@@ -27,6 +27,11 @@ create index if not exists comments_song_id_created_at_idx
   on public.comments (song_id, created_at desc);
 ```
 
+## Live updates (likes/dislikes)
+
+Likes/dislikes are **shared** across users, but the UI needs a refresh mechanism to see other users’ clicks.  
+This project uses simple **polling** (every few seconds) so counts update for everyone without needing realtime subscriptions.
+
 ### 1b. Create atomic rating increment function (recommended)
 
 This makes likes/dislikes **not lose votes** under concurrent traffic:
