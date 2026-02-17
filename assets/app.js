@@ -12,6 +12,16 @@ function safeInt(s) {
   return Number.isFinite(n) ? n : 0;
 }
 
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds) || seconds < 0) return '--:--';
+  const s = Math.floor(seconds);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const r = s % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}`;
+  return `${m}:${String(r).padStart(2, '0')}`;
+}
+
 function voteStorageKey(songId) {
   return `jvhub.vote.${songId}`;
 }
@@ -110,6 +120,21 @@ function songCardHtml(song) {
         </div>
       </div>
       <audio src="${escapeHtml(audioSrc)}"></audio>
+      <div class="player" aria-label="Player controls">
+        <div class="player-times" aria-hidden="true">
+          <span class="player-time player-time--current">0:00</span>
+          <span class="player-time player-time--remaining">--:--</span>
+        </div>
+        <input
+          class="player-progress"
+          type="range"
+          min="0"
+          max="0"
+          step="0.01"
+          value="0"
+          aria-label="Seek"
+        />
+      </div>
       <div class="rating">
         <button class="rating-btn like" data-type="like"><span>👍</span><span class="rating-count">—</span></button>
         <button class="rating-btn dislike" data-type="dislike"><span>👎</span><span class="rating-count">—</span></button>
@@ -134,6 +159,73 @@ function setListingPlaying(listing, isPlaying) {
   btn.innerHTML = isPlaying ? ICONS.pause : ICONS.play;
 }
 
+function wireProgress(listing, audio) {
+  const progress = listing.querySelector('.player-progress');
+  const currentEl = listing.querySelector('.player-time--current');
+  const remainingEl = listing.querySelector('.player-time--remaining');
+  if (!progress || !currentEl || !remainingEl) return;
+
+  let isSeeking = false;
+
+  const setTimes = (cur, dur) => {
+    currentEl.textContent = formatTime(cur);
+    if (Number.isFinite(dur) && dur > 0) {
+      const left = Math.max(0, dur - cur);
+      remainingEl.textContent = `-${formatTime(left)}`;
+    } else {
+      remainingEl.textContent = '--:--';
+    }
+  };
+
+  const syncDuration = () => {
+    if (Number.isFinite(audio.duration) && audio.duration > 0) {
+      progress.max = String(audio.duration);
+      if (!isSeeking) progress.value = String(audio.currentTime || 0);
+      setTimes(audio.currentTime || 0, audio.duration);
+    } else {
+      progress.max = '0';
+      if (!isSeeking) progress.value = '0';
+      setTimes(audio.currentTime || 0, NaN);
+    }
+  };
+
+  const syncTime = () => {
+    if (isSeeking) return;
+    const cur = audio.currentTime || 0;
+    progress.value = String(cur);
+    setTimes(cur, audio.duration);
+  };
+
+  // Initial paint
+  syncDuration();
+  syncTime();
+
+  audio.addEventListener('loadedmetadata', syncDuration);
+  audio.addEventListener('durationchange', syncDuration);
+  audio.addEventListener('timeupdate', syncTime);
+
+  const beginSeek = () => {
+    isSeeking = true;
+  };
+  const endSeek = () => {
+    isSeeking = false;
+    syncTime();
+  };
+
+  progress.addEventListener('pointerdown', beginSeek);
+  progress.addEventListener('pointerup', endSeek);
+  progress.addEventListener('pointercancel', endSeek);
+
+  progress.addEventListener('input', () => {
+    const next = Number.parseFloat(progress.value);
+    const dur = audio.duration;
+    if (Number.isFinite(next)) {
+      audio.currentTime = next;
+      setTimes(next, dur);
+    }
+  });
+}
+
 function wireAudio(listing) {
   const btn = listing.querySelector('.play-btn');
   const audio = listing.querySelector('audio');
@@ -150,6 +242,9 @@ function wireAudio(listing) {
     }
 
     if (audio.paused) {
+      if (Number.isFinite(audio.duration) && audio.duration > 0 && audio.currentTime >= audio.duration) {
+        audio.currentTime = 0;
+      }
       audio.play().catch(() => {});
       setListingPlaying(listing, true);
       currentAudio = audio;
@@ -161,9 +256,12 @@ function wireAudio(listing) {
   });
 
   audio.addEventListener('ended', () => {
+    audio.currentTime = 0;
     setListingPlaying(listing, false);
     if (currentAudio === audio) currentAudio = null;
   });
+
+  wireProgress(listing, audio);
 }
 
 async function loadRatings(songId, likeCountEl, dislikeCountEl) {

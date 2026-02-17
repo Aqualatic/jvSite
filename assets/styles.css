@@ -130,6 +130,38 @@ audio {
   display: none;
 }
 
+/* player (progress + times) */
+.player {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.player-times {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 7px;
+  color: #aaa;
+  letter-spacing: 0.2px;
+}
+
+.player-time {
+  font-variant-numeric: tabular-nums;
+}
+
+.player-progress {
+  width: 100%;
+  accent-color: orange;
+  cursor: pointer;
+}
+
+.player-progress:focus-visible {
+  outline: 2px solid rgba(255, 165, 0, 0.7);
+  outline-offset: 3px;
+}
+
 /* rating */
 .rating {
   display: flex;
