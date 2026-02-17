@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>JVHub</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Press Start 2P', cursive;background:#000;color:#fff}
+        header{background:#000;color:#fff;padding:18px;text-align:center}
+        nav{background:#444;padding:8px 16px}
+        nav a{color:#fff;margin-right:12px;text-decoration:none}
+        .container{max-width:1100px;margin:20px auto;padding:0 16px}
+        .listings{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+        .listing{background:#fff;border:1px solid #e3e3e3;padding:12px;position:relative;overflow:hidden}
+        .listing h3{font-size:18px;color:#222;margin-bottom:6px}
+        .listing p{color:#666;font-size:14px;margin-bottom:6px}
+        .category{display:inline-block;background:#eee;padding:4px 8px;font-size:12px;border-radius:4px}
+        .rating{display:flex;align-items:center;gap:15px;margin-top:10px}
+        .rating-btn{background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Press Start 2P', cursive;color:#fff}
+        .rating-btn.like{color:#4CAF50}
+        .rating-btn.dislike{color:#f44336}
+        .rating-count{font-size:14px;color:#fff}
+
+        /* media box + overlay */
+        .media{position:relative;width:100%;height:0;padding-bottom:56.25%;background:#000;margin:10px 0}
+        .media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+        .overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);opacity:1}
+        .play-btn{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.9);border:none;display:grid;place-items:center;cursor:pointer}
+        .play-btn svg{width:28px;height:28px;fill:#111}
+        .listing.playing .play-btn{background:#111}
+        .listing.playing .play-btn svg{fill:#fff}
+
+        /* hide native audio controls (we use overlay) */
+        audio{display:none}
+    </style>
+</head>
+<body>
+    <header>
+        <h1><span style="color:white;font-weight:bold">JV</span><span style="color:orange;font-weight:bold">Hub</span></h1>
+        <p style="opacity:.85">Leave now, and save your ears</p>
+    </header>
+    <main class="container">
+        <h2 id="singles" style="margin-top: 40px; margin-bottom: 30px;">Recent Singles</h2>
+        <div class="listings">
+            <div class="listing" data-src="media\alliwant.mp3">
+                <h3>All I Want For Christmas Is You - Cover</h3>
+                <div class="media">
+                    <img src="media\alliwant.png" alt="Album Cover">
+                    <div class="overlay"><button class="play-btn" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+                </div>
+                <audio src="media\alliwant.mp3"></audio>
+                <div class="rating">
+                    <button class="rating-btn like" onclick="rateSong('alliwant', 'like')">
+                        <span>👍</span>
+                        <span class="rating-count" id="like-count-alliwant">68</span>
+                    </button>
+                    <button class="rating-btn dislike" onclick="rateSong('alliwant', 'dislike')">
+                        <span>👎</span>
+                        <span class="rating-count" id="dislike-count-alliwant">356754</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="listing" data-src="media\diewa.mp3">
+                <h3>Die with a Smile - The Cover</h3>
+                <div class="media">
+                    <img src="media\dwa.png" alt="Album Cover">
+                    <div class="overlay"><button class="play-btn" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+                </div>
+                <audio src="media\diewa.mp3"></audio>
+                <div class="rating">
+                    <button class="rating-btn like" onclick="rateSong('diewa', 'like')">
+                        <span>👍</span>
+                        <span class="rating-count" id="like-count-diewa">5</span>
+                    </button>
+                    <button class="rating-btn dislike" onclick="rateSong('diewa', 'dislike')">
+                        <span>👎</span>
+                        <span class="rating-count" id="dislike-count-diewa">676767676767</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="listing" data-src="media\trt.mp3">
+                <h3>Temu Rose Toy - KLICKAUD</h3>
+                <div class="media">
+                    <img src="media\trt.png" alt="Album Cover">
+                    <div class="overlay"><button class="play-btn" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+                </div>
+                <audio src="media\trt.mp3"></audio>
+                <div class="rating">
+                    <button class="rating-btn like" onclick="rateSong('trt', 'like')">
+                        <span>👍</span>
+                        <span class="rating-count" id="like-count-trt">-432</span>
+                    </button>
+                    <button class="rating-btn dislike" onclick="rateSong('trt', 'dislike')">
+                        <span>👎</span>
+                        <span class="rating-count" id="dislike-count-trt">9999999999</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="listing" data-src="media\trtp.mp3">
+                <h3>Temu Rose Toy - Performative Remix</h3>
+                <div class="media">
+                    <img src="media\per.png" alt="Album Cover">
+                    <div class="overlay"><button class="play-btn" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+                </div>
+                <audio src="media\trtp.mp3"></audio>
+                <div class="rating">
+                    <button class="rating-btn like" onclick="rateSong('trtp', 'like')">
+                        <span>👍</span>
+                        <span class="rating-count" id="like-count-trtp">3</span>
+                    </button>
+                    <button class="rating-btn dislike" onclick="rateSong('trtp', 'dislike')">
+                        <span>👎</span>
+                        <span class="rating-count" id="dislike-count-trtp">4256</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="listing" data-src="media\Arabian_Nights_Cover_KLICKAUD.mp3">
+                <h3>Arabian Nights - Cover</h3>
+                <div class="media">
+                    <img src="media\arabian.png" alt="Album Cover">
+                    <div class="overlay"><button class="play-btn" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+                </div>
+                <audio src="media\Arabian_Nights_Cover_KLICKAUD.mp3"></audio>
+                <div class="rating">
+                    <button class="rating-btn like" onclick="rateSong('arabian', 'like')">
+                        <span>👍</span>
+                        <span class="rating-count" id="like-count-arabian">1.234456</span>
+                    </button>
+                    <button class="rating-btn dislike" onclick="rateSong('arabian', 'dislike')">
+                        <span>👎</span>
+                        <span class="rating-count" id="dislike-count-arabian">42226346</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="listing" data-src="media\Falling_For_Ya_Cover_KLICKAUD.mp3">
+                <h3>Falling For Ya - Cover</h3>
+                <div class="media">
+                    <img src="media\fallin.png" alt="Album Cover">
+                    <div class="overlay"><button class="play-btn" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+                </div>
+                <audio src="media\Falling_For_Ya_Cover_KLICKAUD.mp3"></audio>
+                <div class="rating">
+                    <button class="rating-btn like" onclick="rateSong('falling', 'like')">
+                        <span>👍</span>
+                        <span class="rating-count" id="like-count-falling">1</span>
+                    </button>
+                    <button class="rating-btn dislike" onclick="rateSong('falling', 'dislike')">
+                        <span>👎</span>
+                        <span class="rating-count" id="dislike-count-falling">7</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="listing" data-src="media\How_Far_Ill_Go_Cover_KLICKAUD.mp3">
+                <h3>How Far I'll Go - Cover</h3>
+                <div class="media">
+                    <img src="media\howfar.png" alt="Album Cover">
+                    <div class="overlay"><button class="play-btn" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+                </div>
+                <audio src="media\How_Far_Ill_Go_Cover_KLICKAUD.mp3"></audio>
+                <div class="rating">
+                    <button class="rating-btn like" onclick="rateSong('howfar', 'like')">
+                        <span>👍</span>
+                        <span class="rating-count" id="like-count-howfar">6</span>
+                    </button>
+                    <button class="rating-btn dislike" onclick="rateSong('howfar', 'dislike')">
+                        <span>👎</span>
+                        <span class="rating-count" id="dislike-count-howfar">7</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="listing" data-src="media\Part_Of_That_World_Cover_KLICKAUD.mp3">
+                <h3>Part Of That World - Cover</h3>
+                <div class="media">
+                    <img src="media\part.png" alt="Album Cover">
+                    <div class="overlay"><button class="play-btn" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+                </div>
+                <audio src="media\Part_Of_That_World_Cover_KLICKAUD.mp3"></audio>
+                <div class="rating">
+                    <button class="rating-btn like" onclick="rateSong('partofworld', 'like')">
+                        <span>👍</span>
+                        <span class="rating-count" id="like-count-partofworld">423</span>
+                    </button>
+                    <button class="rating-btn dislike" onclick="rateSong('partofworld', 'dislike')">
+                        <span>👎</span>
+                        <span class="rating-count" id="dislike-count-partofworld">34624574</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="listing" data-src="media\Poor_Unfortunate_Souls_KLICKAUD.mp3">
+                <h3>Poor Unfortunate Souls</h3>
+                <div class="media">
+                    <img src="media\poor.png" alt="Album Cover">
+                    <div class="overlay"><button class="play-btn" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+                </div>
+                <audio src="media\Poor_Unfortunate_Souls_KLICKAUD.mp3"></audio>
+                <div class="rating">
+                    <button class="rating-btn like" onclick="rateSong('poor', 'like')">
+                        <span>👍</span>
+                        <span class="rating-count" id="like-count-poor">0</span>
+                    </button>
+                    <button class="rating-btn dislike" onclick="rateSong('poor', 'dislike')">
+                        <span>👎</span>
+                        <span class="rating-count" id="dislike-count-poor">3453523</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="listing" data-src="media\Queen_of_Mean_Cover_KLICKAUD.mp3">
+                <h3>Queen of Mean - Cover</h3>
+                <div class="media">
+                    <img src="media\queen.png" alt="Album Cover">
+                    <div class="overlay"><button class="play-btn" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+                </div>
+                <audio src="media\Queen_of_Mean_Cover_KLICKAUD.mp3"></audio>
+                <div class="rating">
+                    <button class="rating-btn like" onclick="rateSong('queen', 'like')">
+                        <span>👍</span>
+                        <span class="rating-count" id="like-count-queen">3245</span>
+                    </button>
+                    <button class="rating-btn dislike" onclick="rateSong('queen', 'dislike')">
+                        <span>👎</span>
+                        <span class="rating-count" id="dislike-count-queen">3467564345756</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="listing" data-src="media\Shes_So_Gone_Cover_KLICKAUD.mp3">
+                <h3>She's So Gone - Cover</h3>
+                <div class="media">
+                    <img src="media\shes.png" alt="Album Cover">
+                    <div class="overlay"><button class="play-btn" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+                </div>
+                <audio src="media\Shes_So_Gone_Cover_KLICKAUD.mp3"></audio>
+                <div class="rating">
+                    <button class="rating-btn like" onclick="rateSong('shesogone', 'like')">
+                        <span>👍</span>
+                        <span class="rating-count" id="like-count-shesogone">345</span>
+                    </button>
+                    <button class="rating-btn dislike" onclick="rateSong('shesogone', 'dislike')">
+                        <span>👎</span>
+                        <span class="rating-count" id="dislike-count-shesogone">346845673</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="listing" data-src="media\Yikes_KLICKAUD.mp3">
+                <h3>Yikes</h3>
+                <div class="media">
+                    <img src="media\yikes.png" alt="Album Cover">
+                    <div class="overlay"><button class="play-btn" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+                </div>
+                <audio src="media\Yikes_KLICKAUD.mp3"></audio>
+                <div class="rating">
+                    <button class="rating-btn like" onclick="rateSong('yikes', 'like')">
+                        <span>👍</span>
+                        <span class="rating-count" id="like-count-yikes">6</span>
+                    </button>
+                    <button class="rating-btn dislike" onclick="rateSong('yikes', 'dislike')">
+                        <span>👎</span>
+                        <span class="rating-count" id="dislike-count-yikes">9</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // simple audio play/pause with single-active enforcement
+        (function(){
+            let current = null;
+            document.querySelectorAll('.listing').forEach(listing=>{
+                const btn = listing.querySelector('.play-btn');
+                const audio = listing.querySelector('audio');
+                if(!audio.src) audio.src = listing.dataset.src || '';
+                btn.addEventListener('click', e=>{
+                    e.stopPropagation();
+                    if(current && current !== audio){
+                        current.pause();
+                        current.closest('.listing')?.classList.remove('playing');
+                    }
+                    if(audio.paused){
+                        audio.play().catch(()=>{});
+                        listing.classList.add('playing');
+                        btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                        current = audio;
+                    } else {
+                        audio.pause();
+                        listing.classList.remove('playing');
+                        btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                        current = null;
+                    }
+                });
+                audio.addEventListener('ended', ()=>{
+                    listing.classList.remove('playing');
+                    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                    if(current===audio) current = null;
+                });
+            });
+        })();
+    </script>
+
+    <script>
+        // Track each song's vote state: null | 'like' | 'dislike'
+        const voteState = {};
+
+        function rateSong(songId, type) {
+            const likeEl    = document.getElementById(`like-count-${songId}`);
+            const dislikeEl = document.getElementById(`dislike-count-${songId}`);
+            const current   = voteState[songId] || null;
+
+            if (current === type) {
+                // User clicked the same button again — undo the vote
+                if (type === 'like')    likeEl.textContent    = parseInt(likeEl.textContent)    - 1;
+                if (type === 'dislike') dislikeEl.textContent = parseInt(dislikeEl.textContent) - 1;
+                voteState[songId] = null;
+            } else {
+                // Switching from the opposite vote — remove it first
+                if (current === 'like')    likeEl.textContent    = parseInt(likeEl.textContent)    - 1;
+                if (current === 'dislike') dislikeEl.textContent = parseInt(dislikeEl.textContent) - 1;
+
+                // Apply the new vote
+                if (type === 'like')    likeEl.textContent    = parseInt(likeEl.textContent)    + 1;
+                if (type === 'dislike') dislikeEl.textContent = parseInt(dislikeEl.textContent) + 1;
+                voteState[songId] = type;
+            }
+        }
+    </script>
+</body>
+</html>
