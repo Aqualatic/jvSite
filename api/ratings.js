@@ -1,6 +1,7 @@
 import { supabaseRestFetch } from './_lib/supabaseRest.js';
 
 function send(res, status, body) {
+  res.setHeader('Cache-Control', 'no-store');
   res.status(status).json(body);
 }
 
@@ -56,28 +57,28 @@ export default async function handler(req, res) {
         return send(res, 200, { ok: true, likes: null, dislikes: null });
       }
 
-      const existingRows = await supabaseRestFetch(
-        `/ratings?select=likes,dislikes&song_id=eq.${encodeURIComponent(songId)}&limit=1`,
-        { method: 'GET' },
-      );
-      const existing =
-        Array.isArray(existingRows) && existingRows.length > 0
-          ? existingRows[0]
-          : { likes: 0, dislikes: 0 };
-
-      const nextLikes = Math.max(0, Number(existing.likes || 0) + likeDelta);
-      const nextDislikes = Math.max(0, Number(existing.dislikes || 0) + dislikeDelta);
-
-      const upserted = await supabaseRestFetch(`/ratings?on_conflict=song_id`, {
+      // Use an atomic increment via SQL function to avoid race conditions.
+      // Create it in Supabase (SQL editor) using the snippet in README.md.
+      const rpcResult = await supabaseRestFetch(`/rpc/increment_rating`, {
         method: 'POST',
         headers: {
-          Prefer: 'resolution=merge-duplicates,return=representation',
+          Prefer: 'return=representation',
         },
-        body: JSON.stringify([{ song_id: songId, likes: nextLikes, dislikes: nextDislikes }]),
+        body: JSON.stringify({
+          p_song_id: songId,
+          p_like_delta: likeDelta,
+          p_dislike_delta: dislikeDelta,
+        }),
       });
 
-      const row = Array.isArray(upserted) && upserted.length > 0 ? upserted[0] : null;
-      return send(res, 200, { ok: true, likes: row?.likes ?? nextLikes, dislikes: row?.dislikes ?? nextDislikes });
+      const row = Array.isArray(rpcResult) && rpcResult.length > 0 ? rpcResult[0] : null;
+      if (!row) return send(res, 500, { error: 'Failed to update ratings' });
+
+      return send(res, 200, {
+        ok: true,
+        likes: row.likes ?? 0,
+        dislikes: row.dislikes ?? 0,
+      });
     }
 
     res.setHeader('Allow', 'GET, POST');

@@ -27,6 +27,38 @@ create index if not exists comments_song_id_created_at_idx
   on public.comments (song_id, created_at desc);
 ```
 
+### 1b. Create atomic rating increment function (recommended)
+
+This makes likes/dislikes **not lose votes** under concurrent traffic:
+
+```sql
+create or replace function public.increment_rating(
+  p_song_id text,
+  p_like_delta integer,
+  p_dislike_delta integer
+)
+returns table (likes integer, dislikes integer)
+language plpgsql
+as $$
+begin
+  insert into public.ratings (song_id, likes, dislikes)
+  values (
+    p_song_id,
+    greatest(0, p_like_delta),
+    greatest(0, p_dislike_delta)
+  )
+  on conflict (song_id) do update
+    set likes = greatest(0, public.ratings.likes + p_like_delta),
+        dislikes = greatest(0, public.ratings.dislikes + p_dislike_delta);
+
+  return query
+    select r.likes, r.dislikes
+    from public.ratings r
+    where r.song_id = p_song_id;
+end;
+$$;
+```
+
 ### 2. Configure environment variables
 
 This project reads Supabase via Vercel serverless functions (so secrets never go to the browser).
