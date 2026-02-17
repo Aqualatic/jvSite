@@ -12,6 +12,28 @@ function safeInt(s) {
   return Number.isFinite(n) ? n : 0;
 }
 
+function voteStorageKey(songId) {
+  return `jvhub.vote.${songId}`;
+}
+
+function getStoredVote(songId) {
+  try {
+    const v = localStorage.getItem(voteStorageKey(songId));
+    return v === 'like' || v === 'dislike' ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+function setStoredVote(songId, vote) {
+  try {
+    if (!vote) localStorage.removeItem(voteStorageKey(songId));
+    else localStorage.setItem(voteStorageKey(songId), vote);
+  } catch {
+    // ignore
+  }
+}
+
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - new Date(ts)) / 1000);
   if (diff < 60) return `${diff}s ago`;
@@ -180,7 +202,10 @@ function wireListingData(listing) {
   const bodyInput = listing.querySelector('.comment-form textarea');
   const submitBtn = listing.querySelector('.comment-submit');
 
-  let myVote = null;
+  let myVote = getStoredVote(songId);
+
+  if (myVote === 'like') likeBtn.classList.add('active');
+  if (myVote === 'dislike') dislikeBtn.classList.add('active');
 
   const refreshRatings = () => loadRatings(songId, likeCount, dislikeCount).catch(() => {});
   const refreshComments = () => loadComments(songId, commentsList).catch(() => {});
@@ -199,6 +224,7 @@ function wireListingData(listing) {
         if (type === 'dislike') dislikeDelta = -1;
         btn.classList.remove('active');
         myVote = null;
+        setStoredVote(songId, null);
       } else {
         if (myVote === 'like') {
           likeDelta = -1;
@@ -212,6 +238,7 @@ function wireListingData(listing) {
         if (type === 'dislike') dislikeDelta += 1;
         btn.classList.add('active');
         myVote = type;
+        setStoredVote(songId, type);
       }
 
       // optimistic UI
