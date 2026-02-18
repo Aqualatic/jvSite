@@ -21,8 +21,14 @@ const SONG_OVERRIDES = {
     title: 'All I Want For Christmas Is You - Cover',
     coverSrc: 'media/alliwant.png',
   },
-  'diewa.mp3': { id: 'diewa', title: 'Die with a Smile - The Cover', coverSrc: 'media/dwa.png' },
-  'trt.mp3': { id: 'trt', title: 'Temu Rose Toy - KLICKAUD', coverSrc: 'media/trt.png' },
+  'diewa.mp3': { 
+    id: 'diewa', 
+    title: 'Die with a Smile - The Cover', 
+    coverSrc: 'media/dwa.png' },
+  'trt.mp3': { 
+    id: 'trt', 
+    title: 'Temu Rose Toy - KLICKAUD', 
+    coverSrc: 'media/trt.png' },
   'trtp.mp3': {
     id: 'trtp',
     title: 'Temu Rose Toy - Performative Remix',
@@ -43,9 +49,9 @@ const SONG_OVERRIDES = {
     title: "How Far I'll Go - Cover",
     coverSrc: 'media/howfar.png',
   },
-  'Part_Of_That_World_Cover_KLICKAUD.mp3': {
+  'Part_Of_Your_World_Cover_KLICKAUD.mp3': {
     id: 'partofworld',
-    title: 'Part Of That World - Cover',
+    title: 'Part Of Your World - Cover',
     coverSrc: 'media/part.png',
   },
   'Poor_Unfortunate_Souls_KLICKAUD.mp3': {
