@@ -1,12 +1,12 @@
-# JVHub (Vercel + Supabase)
+# JVHub
 
-Static site that lists songs from the `media/` folder and supports **likes/dislikes + comments** stored in Supabase.
+Static frontend backed by Supabase (Postgres), deployed on Vercel. Song metadata is served from the `media/` directory; ratings and comments are persisted server-side.
 
-## Setup
+---
 
-### 1. Create tables in Supabase
+## Schema
 
-Run this in the Supabase SQL editor:
+Run in the Supabase SQL editor:
 
 ```sql
 create table if not exists public.ratings (
@@ -27,14 +27,9 @@ create index if not exists comments_song_id_created_at_idx
   on public.comments (song_id, created_at desc);
 ```
 
-## Live updates (likes/dislikes)
+### Atomic rating increments
 
-Likes/dislikes are **shared** across users, but the UI needs a refresh mechanism to see other users’ clicks.  
-This project uses simple **polling** (every few seconds) so counts update for everyone without needing realtime subscriptions.
-
-### 1b. Create atomic rating increment function (recommended)
-
-This makes likes/dislikes **not lose votes** under concurrent traffic:
+To avoid lost updates under concurrent writes, ratings go through a PL/pgSQL function using `INSERT ... ON CONFLICT DO UPDATE` rather than a read-modify-write cycle:
 
 ```sql
 create or replace function public.increment_rating(
@@ -47,13 +42,9 @@ language plpgsql
 as $$
 begin
   insert into public.ratings (song_id, likes, dislikes)
-  values (
-    p_song_id,
-    greatest(0, p_like_delta),
-    greatest(0, p_dislike_delta)
-  )
+  values (p_song_id, greatest(0, p_like_delta), greatest(0, p_dislike_delta))
   on conflict (song_id) do update
-    set likes = greatest(0, public.ratings.likes + p_like_delta),
+    set likes    = greatest(0, public.ratings.likes    + p_like_delta),
         dislikes = greatest(0, public.ratings.dislikes + p_dislike_delta);
 
   return query
@@ -64,26 +55,37 @@ end;
 $$;
 ```
 
-### 2. Configure environment variables
+---
 
-This project reads Supabase via Vercel serverless functions (so secrets never go to the browser).
+## Architecture
 
-Set these in Vercel: **Project Settings → Environment Variables**:
+All Supabase calls go through Vercel serverless functions in `api/` — the service role key is never sent to the client. Rating counts are kept consistent across sessions via short-interval polling rather than a Realtime subscription.
 
-- `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY` (server-only, never expose)
+---
 
-For local development, copy `.env.example` to `.env.local` and fill them in.
+## Environment variables
+
+Set the following in **Vercel → Project Settings → Environment Variables**:
+
+| Variable | Notes |
+|---|---|
+| `SUPABASE_URL` | Project URL from Supabase dashboard |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only. Do not expose client-side. |
+
+For local dev, copy `.env.example` → `.env.local`. Both are gitignored.
+
+---
 
 ## Local development
 
-To run the site locally with the `api/` endpoints, use the Vercel CLI:
+Requires the Vercel CLI to run `api/` routes locally:
 
 ```bash
 vercel dev
 ```
 
-## Notes
+---
 
-- `.env` / `.env.local` are ignored by git (and should not be committed).
-- If you ever accidentally committed real Supabase secrets, rotate them in the Supabase dashboard.
+## Misc
+
+If you've accidentally committed credentials, rotate the service role key immediately in the Supabase dashboard under **Project Settings → API**.
