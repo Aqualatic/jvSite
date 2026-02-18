@@ -49,14 +49,14 @@ const SONG_OVERRIDES = {
     title: "How Far I'll Go - Cover",
     coverSrc: 'media/howfar.png',
   },
-  'Part_Of_Your_World_Cover_KLICKAUD.mp3': {
+  'Part_Of_That_World_Cover_KLICKAUD.mp3': {
     id: 'partofworld',
     title: 'Part Of Your World - Cover',
     coverSrc: 'media/part.png',
   },
   'Poor_Unfortunate_Souls_KLICKAUD.mp3': {
     id: 'poor',
-    title: 'Poor Unfortunate Souls',
+    title: 'Poor Unfortunate Souls',  
     coverSrc: 'media/poor.png',
   },
   'Queen_of_Mean_Cover_KLICKAUD.mp3': {
