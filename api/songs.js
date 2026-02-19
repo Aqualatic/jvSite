@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       id: row.id,
       title: row.title,
       audioSrc: getPublicUrl('audio', row.audio_path),
-      coverSrc: getPublicUrl('artwork', row.artwork_path) ?? DEFAULT_COVER_SVG,
+      coverSrc: getPublicUrl('art', row.artwork_path) ?? DEFAULT_COVER_SVG,
     }));
 
     res.status(200).json({ songs });
