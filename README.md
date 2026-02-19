@@ -9,6 +9,15 @@ Static frontend backed by Supabase (Postgres), deployed on Vercel. Song metadata
 Run in the Supabase SQL editor:
 
 ```sql
+create table if not exists public.songs (
+  id text primary key,
+  title text not null,
+  audio_url text not null,
+  cover_url text not null,
+  filename text,
+  created_at timestamptz not null default now()
+);
+
 create table if not exists public.ratings (
   song_id text primary key,
   likes integer not null default 0,
