@@ -319,6 +319,88 @@ audio {
   margin-top: 4px;
 }
 
+.comment-image-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.comment-image-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #1a1a1a;
+  border: 1px dashed #555;
+  color: #aaa;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 7px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.comment-image-label:hover {
+  border-color: orange;
+  color: orange;
+}
+
+.comment-image-label input[type="file"] {
+  display: none;
+}
+
+.comment-image-clear {
+  background: none;
+  border: 1px solid #555;
+  color: #f44336;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 7px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.comment-image-clear:hover {
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.comment-image-preview {
+  margin-top: 4px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.comment-preview-img {
+  display: block;
+  max-width: 100%;
+  max-height: 160px;
+  object-fit: contain;
+  background: #0a0a0a;
+}
+
+.comment-image {
+  margin-top: 6px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #2a2a2a;
+}
+
+.comment-image img {
+  display: block;
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  background: #0a0a0a;
+  cursor: pointer;
+}
+
+.comment-image img:hover {
+  opacity: 0.9;
+}
+
 .comment-empty {
   font-size: 7px;
   color: #555;

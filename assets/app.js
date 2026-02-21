@@ -72,6 +72,7 @@ function renderComments(listEl, comments) {
       <div class="comment-item">
         <div class="comment-author">${escapeHtml(c.author)}</div>
         <div class="comment-body">${escapeHtml(c.body)}</div>
+        ${c.image_url ? `<div class="comment-image"><img src="${escapeHtml(c.image_url)}" alt="comment image" loading="lazy" /></div>` : ''}
         <div class="comment-time">${timeAgo(c.created_at)}</div>
       </div>
     `,
@@ -144,6 +145,16 @@ function songCardHtml(song) {
         <div class="comment-form">
           <input type="text" placeholder="Your name" maxlength="30" />
           <textarea placeholder="Leave a comment..." maxlength="500"></textarea>
+          <div class="comment-image-row">
+            <label class="comment-image-label" title="Attach image or GIF">
+              📎 IMAGE / GIF
+              <input type="file" class="comment-file-input" accept="image/jpeg,image/png,image/gif,image/webp" />
+            </label>
+            <button class="comment-image-clear" style="display:none">✕ REMOVE</button>
+          </div>
+          <div class="comment-image-preview" style="display:none">
+            <img class="comment-preview-img" src="" alt="preview" />
+          </div>
           <button class="comment-submit">POST</button>
         </div>
         <div class="comments-list"><div class="loading-msg">Loading...</div></div>
@@ -282,10 +293,17 @@ async function loadComments(songId, listEl) {
   renderComments(listEl, data.comments || []);
 }
 
-async function postComment(songId, author, body) {
+async function postComment(songId, author, body, imageUrl) {
   return await fetchJson('/api/comments', {
     method: 'POST',
-    body: JSON.stringify({ song_id: songId, author, body }),
+    body: JSON.stringify({ song_id: songId, author, body, image_url: imageUrl || null }),
+  });
+}
+
+async function uploadImage(dataUrl, filename) {
+  return await fetchJson('/api/upload', {
+    method: 'POST',
+    body: JSON.stringify({ dataUrl, filename }),
   });
 }
 
@@ -296,9 +314,43 @@ function wireListingData(listing) {
   const likeCount = likeBtn.querySelector('.rating-count');
   const dislikeCount = dislikeBtn.querySelector('.rating-count');
   const commentsList = listing.querySelector('.comments-list');
-  const nameInput = listing.querySelector('.comment-form input');
+  const nameInput = listing.querySelector('.comment-form input[type="text"]');
   const bodyInput = listing.querySelector('.comment-form textarea');
   const submitBtn = listing.querySelector('.comment-submit');
+  const fileInput = listing.querySelector('.comment-file-input');
+  const clearBtn = listing.querySelector('.comment-image-clear');
+  const previewWrap = listing.querySelector('.comment-image-preview');
+  const previewImg = listing.querySelector('.comment-preview-img');
+
+  let pendingFile = null; // File object waiting to be uploaded on submit
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image must be under 5 MB');
+      fileInput.value = '';
+      return;
+    }
+
+    pendingFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewImg.src = e.target.result;
+      previewWrap.style.display = 'block';
+      clearBtn.style.display = 'inline-block';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  clearBtn.addEventListener('click', () => {
+    pendingFile = null;
+    fileInput.value = '';
+    previewImg.src = '';
+    previewWrap.style.display = 'none';
+    clearBtn.style.display = 'none';
+  });
 
   let myVote = getStoredVote(songId);
 
@@ -369,12 +421,38 @@ function wireListingData(listing) {
     if (!author || !body) return;
 
     submitBtn.disabled = true;
+
+    let imageUrl = null;
+
+    if (pendingFile) {
+      submitBtn.textContent = 'UPLOADING...';
+      try {
+        const reader = new FileReader();
+        const dataUrl = await new Promise((resolve, reject) => {
+          reader.onload = (e) => resolve(e.target.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(pendingFile);
+        });
+        const result = await uploadImage(dataUrl, pendingFile.name);
+        imageUrl = result.url || null;
+      } catch {
+        // If image upload fails, post without image rather than blocking the comment
+        imageUrl = null;
+      }
+    }
+
     submitBtn.textContent = 'POSTING...';
 
     try {
-      await postComment(songId, author, body);
+      await postComment(songId, author, body, imageUrl);
       nameInput.value = '';
       bodyInput.value = '';
+      // Clear image state
+      pendingFile = null;
+      fileInput.value = '';
+      previewImg.src = '';
+      previewWrap.style.display = 'none';
+      clearBtn.style.display = 'none';
       await refreshComments();
     } catch {
       // ignore
