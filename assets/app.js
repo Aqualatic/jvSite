@@ -1,17 +1,37 @@
+/**
+ * JVHub Frontend Application
+ * 
+ * Main application logic for the music player with ratings and comments.
+ * Handles DOM manipulation, audio playback, user interactions, and API calls.
+ */
+
+// DOM Elements
 const LISTINGS_EL = document.getElementById('listings');
 
+// SVG Icons for play/pause buttons
 const ICONS = {
   play: '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
   pause: '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>',
 };
 
+// Currently playing audio element
 let currentAudio = null;
 
+/**
+ * Safely parse string to integer with fallback
+ * @param {string} s - String to parse
+ * @returns {number} Parsed integer or 0
+ */
 function safeInt(s) {
   const n = Number.parseInt(String(s || '').trim(), 10);
   return Number.isFinite(n) ? n : 0;
 }
 
+/**
+ * Format seconds into human-readable time string
+ * @param {number} seconds - Time in seconds
+ * @returns {string} Formatted time string (HH:MM:SS or MM:SS)
+ */
 function formatTime(seconds) {
   if (!Number.isFinite(seconds) || seconds < 0) return '--:--';
   const s = Math.floor(seconds);
@@ -22,10 +42,20 @@ function formatTime(seconds) {
   return `${m}:${String(r).padStart(2, '0')}`;
 }
 
+/**
+ * Generate localStorage key for storing user vote
+ * @param {string} songId - Song identifier
+ * @returns {string} localStorage key
+ */
 function voteStorageKey(songId) {
   return `jvhub.vote.${songId}`;
 }
 
+/**
+ * Retrieve stored vote for a song from localStorage
+ * @param {string} songId - Song identifier
+ * @returns {string|null} 'like', 'dislike', or null
+ */
 function getStoredVote(songId) {
   try {
     const v = localStorage.getItem(voteStorageKey(songId));
@@ -35,15 +65,25 @@ function getStoredVote(songId) {
   }
 }
 
+/**
+ * Store user vote for a song in localStorage
+ * @param {string} songId - Song identifier
+ * @param {string|null} vote - 'like', 'dislike', or null to clear
+ */
 function setStoredVote(songId, vote) {
   try {
     if (!vote) localStorage.removeItem(voteStorageKey(songId));
     else localStorage.setItem(voteStorageKey(songId), vote);
   } catch {
-    // ignore
+    // ignore storage errors
   }
 }
 
+/**
+ * Generate human-readable time ago string
+ * @param {string|Date} ts - Timestamp
+ * @returns {string} Time ago string
+ */
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - new Date(ts)) / 1000);
   if (diff < 60) return `${diff}s ago`;
@@ -52,14 +92,24 @@ function timeAgo(ts) {
   return `${Math.floor(diff / 86400)}d ago`;
 }
 
+/**
+ * Escape HTML characters to prevent XSS
+ * @param {string} str - String to escape
+ * @returns {string} Escaped string
+ */
 function escapeHtml(str) {
   return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/&/g, '&')
+    .replace(/</g, '<')
+    .replace(/>/g, '>')
+    .replace(/"/g, '"');
 }
 
+/**
+ * Render comments list in the DOM
+ * @param {HTMLElement} listEl - Container element for comments
+ * @param {Array} comments - Array of comment objects
+ */
 function renderComments(listEl, comments) {
   if (!comments || comments.length === 0) {
     listEl.innerHTML = '<div class="comment-empty">No comments yet. Be first!</div>';
@@ -80,6 +130,13 @@ function renderComments(listEl, comments) {
     .join('');
 }
 
+/**
+ * Fetch JSON data from API endpoint with error handling
+ * @param {string} url - API endpoint URL
+ * @param {Object} options - Fetch options
+ * @returns {Promise<Object>} Parsed JSON response
+ * @throws {Error} If request fails or response is invalid
+ */
 async function fetchJson(url, options) {
   const res = await fetch(url, {
     headers: {
@@ -94,7 +151,7 @@ async function fetchJson(url, options) {
   try {
     data = text ? JSON.parse(text) : null;
   } catch {
-    // ignore
+    // ignore parsing errors
   }
 
   if (!res.ok) {
@@ -105,6 +162,11 @@ async function fetchJson(url, options) {
   return data;
 }
 
+/**
+ * Generate HTML for a song listing card
+ * @param {Object} song - Song object with id, title, audioSrc, coverSrc
+ * @returns {string} HTML string for the song card
+ */
 function songCardHtml(song) {
   const audioSrc = song.audioSrc || '';
   const coverSrc = song.coverSrc || '';
@@ -163,6 +225,11 @@ function songCardHtml(song) {
   `;
 }
 
+/**
+ * Update play button state and listing appearance
+ * @param {HTMLElement} listing - Song listing element
+ * @param {boolean} isPlaying - Whether audio is currently playing
+ */
 function setListingPlaying(listing, isPlaying) {
   const btn = listing.querySelector('.play-btn');
   if (!btn) return;
@@ -170,6 +237,11 @@ function setListingPlaying(listing, isPlaying) {
   btn.innerHTML = isPlaying ? ICONS.pause : ICONS.play;
 }
 
+/**
+ * Wire up progress bar and time display for audio element
+ * @param {HTMLElement} listing - Song listing element
+ * @param {HTMLAudioElement} audio - Audio element
+ */
 function wireProgress(listing, audio) {
   const progress = listing.querySelector('.player-progress');
   const currentEl = listing.querySelector('.player-time--current');
@@ -237,6 +309,10 @@ function wireProgress(listing, audio) {
   });
 }
 
+/**
+ * Wire up audio playback controls for a song listing
+ * @param {HTMLElement} listing - Song listing element
+ */
 function wireAudio(listing) {
   const btn = listing.querySelector('.play-btn');
   const audio = listing.querySelector('audio');
@@ -275,12 +351,25 @@ function wireAudio(listing) {
   wireProgress(listing, audio);
 }
 
+/**
+ * Load and display rating counts for a song
+ * @param {string} songId - Song identifier
+ * @param {HTMLElement} likeCountEl - Element to display like count
+ * @param {HTMLElement} dislikeCountEl - Element to display dislike count
+ */
 async function loadRatings(songId, likeCountEl, dislikeCountEl) {
   const data = await fetchJson(`/api/ratings?song_id=${encodeURIComponent(songId)}`);
   likeCountEl.textContent = data.likes ?? 0;
   dislikeCountEl.textContent = data.dislikes ?? 0;
 }
 
+/**
+ * Apply a vote change to a song's ratings
+ * @param {string} songId - Song identifier
+ * @param {number} likeDelta - Change in like count (-1, 0, or 1)
+ * @param {number} dislikeDelta - Change in dislike count (-1, 0, or 1)
+ * @returns {Promise<Object>} Updated rating counts
+ */
 async function applyVote(songId, likeDelta, dislikeDelta) {
   return await fetchJson('/api/ratings', {
     method: 'POST',
@@ -288,11 +377,24 @@ async function applyVote(songId, likeDelta, dislikeDelta) {
   });
 }
 
+/**
+ * Load and render comments for a song
+ * @param {string} songId - Song identifier
+ * @param {HTMLElement} listEl - Container element for comments
+ */
 async function loadComments(songId, listEl) {
   const data = await fetchJson(`/api/comments?song_id=${encodeURIComponent(songId)}`);
   renderComments(listEl, data.comments || []);
 }
 
+/**
+ * Post a new comment for a song
+ * @param {string} songId - Song identifier
+ * @param {string} author - Comment author name
+ * @param {string} body - Comment text
+ * @param {string|null} imageUrl - Optional image URL
+ * @returns {Promise<Object>} Created comment data
+ */
 async function postComment(songId, author, body, imageUrl) {
   return await fetchJson('/api/comments', {
     method: 'POST',
@@ -300,6 +402,12 @@ async function postComment(songId, author, body, imageUrl) {
   });
 }
 
+/**
+ * Upload an image to Supabase storage
+ * @param {string} dataUrl - Base64 data URL of image
+ * @param {string} filename - Original filename
+ * @returns {Promise<Object>} Upload result with public URL
+ */
 async function uploadImage(dataUrl, filename) {
   return await fetchJson('/api/upload', {
     method: 'POST',
@@ -307,6 +415,10 @@ async function uploadImage(dataUrl, filename) {
   });
 }
 
+/**
+ * Wire up all interactive functionality for a song listing
+ * @param {HTMLElement} listing - Song listing element
+ */
 function wireListingData(listing) {
   const songId = listing.dataset.song;
   const likeBtn = listing.querySelector('.rating-btn.like');
@@ -324,6 +436,7 @@ function wireListingData(listing) {
 
   let pendingFile = null; // File object waiting to be uploaded on submit
 
+  // Handle image file selection and preview
   fileInput.addEventListener('change', () => {
     const file = fileInput.files && fileInput.files[0];
     if (!file) return;
@@ -344,6 +457,7 @@ function wireListingData(listing) {
     reader.readAsDataURL(file);
   });
 
+  // Handle image preview clearing
   clearBtn.addEventListener('click', () => {
     pendingFile = null;
     fileInput.value = '';
@@ -352,18 +466,20 @@ function wireListingData(listing) {
     clearBtn.style.display = 'none';
   });
 
+  // Initialize user's stored vote state
   let myVote = getStoredVote(songId);
 
   if (myVote === 'like') likeBtn.classList.add('active');
   if (myVote === 'dislike') dislikeBtn.classList.add('active');
 
+  // Setup refresh functions for ratings and comments
   const refreshRatings = () => loadRatings(songId, likeCount, dislikeCount).catch(() => {});
   const refreshComments = () => loadComments(songId, commentsList).catch(() => {});
 
   refreshRatings();
   refreshComments();
 
-  // Keep numbers fresh for other users' votes (simple polling).
+  // Poll for rating updates from other users every 7 seconds
   // (Realtime is possible too, but polling is the simplest + most reliable setup.)
   const ratingsPollMs = 7000;
   setInterval(() => {
@@ -372,19 +488,23 @@ function wireListingData(listing) {
     refreshRatings();
   }, ratingsPollMs);
 
+  // Setup rating buttons click handlers
   [likeBtn, dislikeBtn].forEach((btn) => {
     btn.addEventListener('click', async () => {
       const type = btn.dataset.type;
       let likeDelta = 0;
       let dislikeDelta = 0;
 
+      // Handle vote state changes
       if (myVote === type) {
+        // Remove vote
         if (type === 'like') likeDelta = -1;
         if (type === 'dislike') dislikeDelta = -1;
         btn.classList.remove('active');
         myVote = null;
         setStoredVote(songId, null);
       } else {
+        // Change or add vote
         if (myVote === 'like') {
           likeDelta = -1;
           likeBtn.classList.remove('active');
@@ -400,7 +520,7 @@ function wireListingData(listing) {
         setStoredVote(songId, type);
       }
 
-      // optimistic UI
+      // Optimistic UI update
       likeCount.textContent = Math.max(0, safeInt(likeCount.textContent) + likeDelta);
       dislikeCount.textContent = Math.max(0, safeInt(dislikeCount.textContent) + dislikeDelta);
 
@@ -409,12 +529,13 @@ function wireListingData(listing) {
         likeCount.textContent = updated.likes ?? likeCount.textContent;
         dislikeCount.textContent = updated.dislikes ?? dislikeCount.textContent;
       } catch {
-        // revert by reloading from server
+        // Revert by reloading from server
         refreshRatings();
       }
     });
   });
 
+  // Setup comment submission handler
   submitBtn.addEventListener('click', async () => {
     const author = nameInput.value.trim();
     const body = bodyInput.value.trim();
@@ -424,6 +545,7 @@ function wireListingData(listing) {
 
     let imageUrl = null;
 
+    // Handle image upload if file is selected
     if (pendingFile) {
       submitBtn.textContent = 'UPLOADING...';
       try {
@@ -455,7 +577,7 @@ function wireListingData(listing) {
       clearBtn.style.display = 'none';
       await refreshComments();
     } catch {
-      // ignore
+      // ignore errors
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = 'POST';
@@ -465,6 +587,9 @@ function wireListingData(listing) {
   wireAudio(listing);
 }
 
+/**
+ * Initialize the application by loading songs and setting up the UI
+ */
 async function init() {
   try {
     const data = await fetchJson('/api/songs');

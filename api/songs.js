@@ -1,25 +1,5 @@
 import { supabaseRestFetch } from './_lib/supabaseRest.js';
-
-const DEFAULT_COVER_SVG = `data:image/svg+xml;utf8,${encodeURIComponent(`<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#111"/>
-      <stop offset="1" stop-color="#2a2a2a"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="675" fill="url(#g)"/>
-  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
-        font-family="monospace" font-size="56" fill="#777">JVHub</text>
-</svg>`)}`.replace(/%0A/g, '');
-
-const BUCKET = 'media'; // your bucket name here
-
-function getPublicUrl(subfolder, filename) {
-  if (!filename) return null;
-  const base = process.env.SUPABASE_URL.replace(/\/+$/, '');
-  return `${base}/storage/v1/object/public/${BUCKET}/${subfolder}/${filename}`;
-}
+import { getPublicUrl, DEFAULT_COVER_SVG } from './_lib/utils.js';
 
 export default async function handler(req, res) {
   try {
