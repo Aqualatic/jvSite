@@ -30,27 +30,20 @@
       --border: #263055;
       --border-light: #33406e;
       --shadow: rgba(0, 0, 0, 0.5);
-      --waveform-color: rgba(196, 149, 106, 0.3);
       --font-display: 'Playfair Display', Georgia, serif;
       --font-body: 'Karla', -apple-system, BlinkMacSystemFont, sans-serif;
       --radius: 12px;
       --radius-sm: 8px;
       --player-height: 80px;
+      --sidebar-width: 420px;
       --transition: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     /* ============================================================
        RESET & BASE
        ============================================================ */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: var(--font-body);
@@ -88,19 +81,12 @@
         radial-gradient(ellipse 50% 40% at 50% 50%, rgba(201, 169, 110, 0.03) 0%, transparent 60%);
     }
 
-    /* All content above the grain/mesh */
-    .site-wrap {
-      position: relative;
-      z-index: 1;
-    }
+    .site-wrap { position: relative; z-index: 1; }
 
     /* ============================================================
-       SITE HEADER
+       SITE HEADER & NAV
        ============================================================ */
-    .site-header {
-      padding: 40px 20px 20px;
-      text-align: center;
-    }
+    .site-header { padding: 32px 20px 0; text-align: center; }
 
     .site-title {
       font-family: var(--font-display);
@@ -109,40 +95,133 @@
       letter-spacing: -0.02em;
       line-height: 1.1;
     }
-
-    .site-title__jv {
-      color: var(--text-primary);
-    }
-
-    .site-title__hub {
-      color: var(--accent-amber);
-      font-style: italic;
-    }
+    .site-title__jv { color: var(--text-primary); }
+    .site-title__hub { color: var(--accent-amber); font-style: italic; }
 
     .site-tagline {
       font-family: var(--font-body);
-      font-size: clamp(0.75rem, 2vw, 0.9rem);
+      font-size: clamp(0.7rem, 2vw, 0.85rem);
       color: var(--text-secondary);
-      margin-top: 6px;
+      margin-top: 4px;
       font-weight: 300;
       font-style: italic;
     }
 
+    /* Navigation */
+    .site-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      margin-top: 24px;
+      padding: 0 16px;
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 400;
+      padding: 6px 18px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all var(--transition);
+      letter-spacing: 0.02em;
+    }
+
+    .nav-tab:hover {
+      border-color: var(--border-light);
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .nav-tab.active {
+      background: var(--accent-amber-glow);
+      border-color: var(--accent-amber);
+      color: var(--accent-amber);
+      font-weight: 600;
+    }
+
+    /* Search bar */
+    .search-wrap {
+      max-width: 480px;
+      margin: 18px auto 0;
+      padding: 0 20px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      padding: 10px 16px 10px 40px;
+      border-radius: 100px;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+
+    .search-input:focus { border-color: var(--accent-amber); }
+    .search-input::placeholder { color: var(--text-dim); }
+
+    .search-icon {
+      position: absolute;
+      left: 34px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       TAB CONTENT PAGES
+       ============================================================ */
+    .tab-page { display: none; }
+    .tab-page.active { display: block; }
+
+    /* About Me page */
+    .about-page { max-width: 700px; margin: 40px auto; padding: 0 20px; }
+    .about-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px;
+    }
+    .about-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .about-card .about-sub {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    .about-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .about-card p:last-child { margin-bottom: 0; }
+
     /* ============================================================
        CONTAINER
        ============================================================ */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
     /* ============================================================
        HERO — featured / latest track
        ============================================================ */
-    .hero {
-      margin: 20px 0 48px;
-    }
+    .hero { margin: 28px 0 40px; }
 
     .hero-card {
       position: relative;
@@ -168,9 +247,6 @@
       aspect-ratio: 21 / 9;
       background: var(--bg-secondary);
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .hero-art img {
@@ -181,9 +257,7 @@
       transition: transform 0.5s ease;
     }
 
-    .hero-card:hover .hero-art img {
-      transform: scale(1.03);
-    }
+    .hero-card:hover .hero-art img { transform: scale(1.03); }
 
     .hero-overlay {
       position: absolute;
@@ -199,8 +273,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 72px;
-      height: 72px;
+      width: 72px; height: 72px;
       border-radius: 50%;
       background: rgba(196, 149, 106, 0.9);
       border: none;
@@ -216,14 +289,10 @@
       background: var(--accent-amber);
     }
 
-    .hero-play-btn svg {
-      width: 32px;
-      height: 32px;
-      fill: var(--bg-primary);
-    }
+    .hero-play-btn svg { width: 32px; height: 32px; fill: var(--bg-primary); }
 
     .hero-info {
-      padding: 20px 24px;
+      padding: 18px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -235,11 +304,9 @@
       font-family: var(--font-display);
       font-size: clamp(1.1rem, 3vw, 1.6rem);
       font-weight: 600;
-      color: var(--text-primary);
     }
-
     .hero-info .hero-meta {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-secondary);
       font-weight: 300;
     }
@@ -267,12 +334,10 @@
       font-size: clamp(1.2rem, 3vw, 1.8rem);
       font-weight: 600;
       margin-bottom: 24px;
-      color: var(--text-primary);
       display: flex;
       align-items: center;
       gap: 12px;
     }
-
     .section-title::after {
       content: '';
       flex: 1;
@@ -295,34 +360,27 @@
       border-radius: var(--radius);
       overflow: hidden;
       transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
-      opacity: 0;
-      transform: translateY(20px);
+      opacity: 0; transform: translateY(20px);
       animation: cardFadeIn 0.5s ease forwards;
     }
 
-    /* Staggered delay for each card */
-    .listing:nth-child(1)  { animation-delay: 0.05s; }
-    .listing:nth-child(2)  { animation-delay: 0.10s; }
-    .listing:nth-child(3)  { animation-delay: 0.15s; }
-    .listing:nth-child(4)  { animation-delay: 0.20s; }
-    .listing:nth-child(5)  { animation-delay: 0.25s; }
-    .listing:nth-child(6)  { animation-delay: 0.30s; }
-    .listing:nth-child(7)  { animation-delay: 0.35s; }
-    .listing:nth-child(8)  { animation-delay: 0.40s; }
-    .listing:nth-child(9)  { animation-delay: 0.45s; }
-    .listing:nth-child(10) { animation-delay: 0.50s; }
-    .listing:nth-child(11) { animation-delay: 0.55s; }
-    .listing:nth-child(12) { animation-delay: 0.60s; }
-    .listing:nth-child(13) { animation-delay: 0.65s; }
-    .listing:nth-child(14) { animation-delay: 0.70s; }
-    .listing:nth-child(15) { animation-delay: 0.75s; }
+    .listing:nth-child(1)  { animation-delay: 0.03s; }
+    .listing:nth-child(2)  { animation-delay: 0.06s; }
+    .listing:nth-child(3)  { animation-delay: 0.09s; }
+    .listing:nth-child(4)  { animation-delay: 0.12s; }
+    .listing:nth-child(5)  { animation-delay: 0.15s; }
+    .listing:nth-child(6)  { animation-delay: 0.18s; }
+    .listing:nth-child(7)  { animation-delay: 0.21s; }
+    .listing:nth-child(8)  { animation-delay: 0.24s; }
+    .listing:nth-child(9)  { animation-delay: 0.27s; }
+    .listing:nth-child(10) { animation-delay: 0.30s; }
+    .listing:nth-child(11) { animation-delay: 0.33s; }
+    .listing:nth-child(12) { animation-delay: 0.36s; }
+    .listing:nth-child(13) { animation-delay: 0.39s; }
+    .listing:nth-child(14) { animation-delay: 0.42s; }
+    .listing:nth-child(15) { animation-delay: 0.45s; }
 
-    @keyframes cardFadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+    @keyframes cardFadeIn { to { opacity: 1; transform: translateY(0); } }
 
     .listing:hover {
       transform: translateY(-6px);
@@ -330,89 +388,50 @@
       border-color: var(--border-light);
     }
 
-    /* Card art / waveform placeholder */
     .card-art {
       position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
       background: var(--bg-secondary);
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-
     .card-art img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
       transition: transform 0.4s ease;
     }
-
-    .listing:hover .card-art img {
-      transform: scale(1.04);
-    }
+    .listing:hover .card-art img { transform: scale(1.04); }
 
     .card-overlay {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background: rgba(11, 17, 32, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity var(--transition);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity var(--transition);
     }
-
-    .listing:hover .card-overlay,
-    .listing.playing .card-overlay {
-      opacity: 1;
-    }
+    .listing:hover .card-overlay, .listing.playing .card-overlay { opacity: 1; }
 
     .card-play-btn {
-      width: 56px;
-      height: 56px;
+      width: 56px; height: 56px;
       border-radius: 50%;
       background: rgba(196, 149, 106, 0.9);
       border: none;
-      display: grid;
-      place-items: center;
+      display: grid; place-items: center;
       cursor: pointer;
       transition: transform var(--transition), background var(--transition);
       box-shadow: 0 4px 16px rgba(196, 149, 106, 0.3);
     }
+    .card-play-btn:hover { transform: scale(1.08); background: var(--accent-amber); }
+    .card-play-btn svg { width: 26px; height: 26px; fill: var(--bg-primary); }
 
-    .card-play-btn:hover {
-      transform: scale(1.08);
-      background: var(--accent-amber);
-    }
-
-    .card-play-btn svg {
-      width: 26px;
-      height: 26px;
-      fill: var(--bg-primary);
-    }
-
-    /* Waveform visualization for playing state */
+    /* Waveform */
     .waveform {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      position: absolute; bottom: 0; left: 0; right: 0;
       height: 48px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      gap: 3px;
-      padding: 0 12px 10px;
-      opacity: 0;
-      transition: opacity 0.4s ease;
+      display: flex; align-items: flex-end; justify-content: center;
+      gap: 3px; padding: 0 12px 10px;
+      opacity: 0; transition: opacity 0.4s ease;
     }
-
-    .listing.playing .waveform {
-      opacity: 1;
-    }
+    .listing.playing .waveform { opacity: 1; }
 
     .waveform-bar {
       width: 3px;
@@ -420,7 +439,6 @@
       border-radius: 2px 2px 0 0;
       animation: wavePulse 0.8s ease-in-out infinite alternate;
     }
-
     .waveform-bar:nth-child(1)  { height: 14px; animation-delay: 0.0s; }
     .waveform-bar:nth-child(2)  { height: 28px; animation-delay: 0.1s; }
     .waveform-bar:nth-child(3)  { height: 20px; animation-delay: 0.2s; }
@@ -442,594 +460,301 @@
       100% { transform: scaleY(1);   opacity: 1; }
     }
 
-    /* Card info */
-    .card-info {
-      padding: 14px 16px 16px;
-    }
-
+    .card-info { padding: 14px 16px 8px; }
     .card-title {
       font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 1rem; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
+    .card-date { font-size: 0.72rem; color: var(--text-dim); margin-top: 2px; font-weight: 300; }
 
-    .card-meta {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      font-weight: 300;
-    }
-
-    /* card-level progress (thin bar shown when playing) */
     .card-progress-wrap {
-      height: 2px;
-      background: var(--bg-secondary);
-      margin: 0 16px 12px;
-      border-radius: 2px;
-      overflow: hidden;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      height: 2px; background: var(--bg-secondary);
+      margin: 0 16px 10px; border-radius: 2px; overflow: hidden;
+      opacity: 0; transition: opacity 0.3s ease;
     }
-
-    .listing.playing .card-progress-wrap {
-      opacity: 1;
-    }
-
+    .listing.playing .card-progress-wrap { opacity: 1; }
     .card-progress-bar {
-      height: 100%;
-      width: 0%;
+      height: 100%; width: 0%;
       background: var(--accent-amber);
       border-radius: 2px;
       transition: width 0.25s linear;
     }
 
-    /* ============================================================
-       RATINGS & COMMENTS (collapsible inside card)
-       ============================================================ */
     .card-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      display: flex; align-items: center; gap: 6px;
       padding: 0 16px 14px;
     }
 
     .rating-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; gap: 3px;
       font-family: var(--font-body);
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      padding: 4px 8px;
-      border-radius: 6px;
+      font-size: 0.75rem; color: var(--text-secondary);
+      padding: 4px 7px; border-radius: 6px;
       transition: color var(--transition), background var(--transition);
     }
+    .rating-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.04); }
+    .rating-btn.active { color: var(--accent-amber); background: var(--accent-amber-glow); }
+    .rating-btn .icon { font-size: 0.85rem; }
+    .rating-count { font-size: 0.75rem; font-weight: 600; min-width: 12px; }
 
-    .rating-btn:hover {
-      color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .rating-btn.active {
-      color: var(--accent-amber);
-      background: var(--accent-amber-glow);
-    }
-
-    .rating-btn .icon {
-      font-size: 0.9rem;
-    }
-
-    .rating-count {
-      font-size: 0.75rem;
-      font-weight: 600;
-      min-width: 12px;
-    }
-
-    .card-expand {
-      background: none;
-      border: none;
-      color: var(--text-dim);
-      cursor: pointer;
-      font-family: var(--font-body);
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 4px 8px;
-      border-radius: 6px;
+    .card-comment-btn {
+      background: none; border: none; color: var(--text-dim);
+      cursor: pointer; font-family: var(--font-body);
+      font-size: 0.72rem; padding: 4px 8px; border-radius: 6px;
       transition: color var(--transition), background var(--transition);
-      margin-left: auto;
+      margin-left: auto; display: flex; align-items: center; gap: 4px;
     }
+    .card-comment-btn:hover { color: var(--text-secondary); background: rgba(255,255,255,0.04); }
 
-    .card-expand:hover {
-      color: var(--text-secondary);
-      background: rgba(255, 255, 255, 0.04);
+    /* ============================================================
+       COMMENT SIDEBAR
+       ============================================================ */
+    .sidebar-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 200; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
     }
+    .sidebar-overlay.open { opacity: 1; pointer-events: auto; }
 
-    .card-comments {
-      border-top: 1px solid var(--border);
-      padding: 14px 16px 16px;
-      display: none;
-    }
-
-    .card-comments.open {
-      display: block;
-    }
-
-    .comment-form {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 14px;
-    }
-
-    .comment-form input,
-    .comment-form textarea {
+    .comment-sidebar {
+      position: fixed; top: 0; right: 0; bottom: 0;
+      width: var(--sidebar-width); max-width: 100vw;
       background: var(--bg-secondary);
+      border-left: 1px solid var(--border);
+      z-index: 201;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      display: flex; flex-direction: column;
+      box-shadow: -8px 0 40px var(--shadow);
+    }
+    .comment-sidebar.open { transform: translateX(0); }
+
+    .sidebar-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .sidebar-header h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; }
+    .sidebar-header .sidebar-song-title { font-size: 0.75rem; color: var(--text-secondary); font-weight: 300; }
+
+    .sidebar-close {
+      background: none; border: 1px solid var(--border); color: var(--text-secondary);
+      width: 32px; height: 32px; border-radius: 50%;
+      display: grid; place-items: center; cursor: pointer; font-size: 1rem;
+      transition: all var(--transition);
+    }
+    .sidebar-close:hover { border-color: var(--border-light); color: var(--text-primary); }
+
+    .sidebar-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
+    .sidebar-body::-webkit-scrollbar { width: 4px; }
+    .sidebar-body::-webkit-scrollbar-track { background: var(--bg-primary); }
+    .sidebar-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .sidebar-comment-form {
+      display: flex; flex-direction: column; gap: 8px;
+      margin-bottom: 20px; padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-comment-form input,
+    .sidebar-comment-form textarea {
+      background: var(--bg-primary);
       border: 1px solid var(--border);
       color: var(--text-primary);
       font-family: var(--font-body);
-      font-size: 0.8rem;
-      padding: 8px 10px;
+      font-size: 0.82rem;
+      padding: 9px 12px;
       border-radius: var(--radius-sm);
       outline: none;
       transition: border-color var(--transition);
       resize: none;
     }
+    .sidebar-comment-form input:focus,
+    .sidebar-comment-form textarea:focus { border-color: var(--accent-amber); }
+    .sidebar-comment-form textarea { min-height: 70px; }
 
-    .comment-form input:focus,
-    .comment-form textarea:focus {
-      border-color: var(--accent-amber);
+    .sidebar-comment-form-row {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     }
 
-    .comment-form textarea {
-      min-height: 52px;
-    }
-
-    .comment-form-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .comment-submit {
-      background: var(--accent-amber);
-      border: none;
+    .sidebar-comment-submit {
+      background: var(--accent-amber); border: none;
       color: var(--bg-primary);
       font-family: var(--font-body);
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 6px 16px;
-      border-radius: var(--radius-sm);
+      font-size: 0.8rem; font-weight: 600;
+      padding: 7px 20px; border-radius: var(--radius-sm);
       cursor: pointer;
       transition: opacity var(--transition), transform var(--transition);
     }
+    .sidebar-comment-submit:hover { opacity: 0.85; transform: translateY(-1px); }
+    .sidebar-comment-submit:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
-    .comment-submit:hover {
-      opacity: 0.85;
-      transform: translateY(-1px);
-    }
-
-    .comment-submit:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .comment-file-label {
-      font-size: 0.7rem;
-      color: var(--text-dim);
-      cursor: pointer;
-      padding: 4px 8px;
-      border: 1px dashed var(--border);
+    .sidebar-file-label {
+      font-size: 0.72rem; color: var(--text-dim); cursor: pointer;
+      padding: 5px 10px; border: 1px dashed var(--border);
       border-radius: var(--radius-sm);
       transition: color var(--transition), border-color var(--transition);
     }
+    .sidebar-file-label:hover { color: var(--text-secondary); border-color: var(--border-light); }
+    .sidebar-file-label input { display: none; }
 
-    .comment-file-label:hover {
-      color: var(--text-secondary);
-      border-color: var(--border-light);
-    }
-
-    .comment-file-label input {
-      display: none;
-    }
-
-    .comment-image-clear {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--accent-mauve);
-      font-size: 0.7rem;
-      padding: 4px 8px;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
+    .sidebar-image-clear {
+      background: none; border: 1px solid var(--border);
+      color: var(--accent-mauve); font-size: 0.7rem;
+      padding: 5px 10px; border-radius: var(--radius-sm); cursor: pointer;
       transition: background var(--transition);
     }
+    .sidebar-image-clear:hover { background: rgba(181,131,141,0.1); }
 
-    .comment-image-clear:hover {
-      background: rgba(181, 131, 141, 0.1);
+    .sidebar-image-preview {
+      max-width: 200px;
+      border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden;
+    }
+    .sidebar-preview-img {
+      display: block; max-width: 100%; max-height: 120px;
+      object-fit: contain; background: var(--bg-primary);
     }
 
-    .comment-image-preview {
-      margin-top: 4px;
+    .sidebar-comments-list {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+
+    .sidebar-comment-item {
+      background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      overflow: hidden;
+      padding: 12px;
+    }
+    .sidebar-comment-author { font-size: 0.78rem; font-weight: 600; color: var(--accent-amber); margin-bottom: 2px; }
+    .sidebar-comment-body { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; word-break: break-word; }
+    .sidebar-comment-time { font-size: 0.65rem; color: var(--text-dim); margin-top: 4px; }
+
+    .sidebar-comment-image {
+      margin-top: 6px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border);
+    }
+    .sidebar-comment-image img {
+      display: block; max-width: 100%; max-height: 160px;
+      object-fit: contain; background: var(--bg-primary);
     }
 
-    .comment-preview-img {
-      display: block;
-      max-width: 100%;
-      max-height: 120px;
-      object-fit: contain;
-      background: var(--bg-primary);
-    }
-
-    .comments-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 240px;
-      overflow-y: auto;
-    }
-
-    .comments-list::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .comments-list::-webkit-scrollbar-track {
-      background: var(--bg-secondary);
-    }
-
-    .comments-list::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 2px;
-    }
-
-    .comment-item {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px;
-    }
-
-    .comment-author {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--accent-amber);
-      margin-bottom: 2px;
-    }
-
-    .comment-body {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-      word-break: break-word;
-    }
-
-    .comment-time {
-      font-size: 0.65rem;
-      color: var(--text-dim);
-      margin-top: 4px;
-    }
-
-    .comment-image {
-      margin-top: 6px;
-      border-radius: 4px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-
-    .comment-image img {
-      display: block;
-      max-width: 100%;
-      max-height: 160px;
-      object-fit: contain;
-      background: var(--bg-primary);
-    }
-
-    .comment-empty {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      text-align: center;
-      padding: 12px 0;
-    }
-
-    .loading-msg {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      text-align: center;
-      padding: 8px 0;
-    }
-
-    .error-msg {
-      font-size: 0.8rem;
-      color: var(--accent-mauve);
-      text-align: center;
-      padding: 20px 0;
-      line-height: 1.6;
+    .sidebar-comment-empty {
+      font-size: 0.8rem; color: var(--text-dim);
+      text-align: center; padding: 30px 0;
     }
 
     /* ============================================================
        BOTTOM PERSISTENT PLAYER
        ============================================================ */
     .bottom-player {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      position: fixed; bottom: 0; left: 0; right: 0;
       height: var(--player-height);
       background: var(--bg-player);
       border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      padding: 0 20px;
-      gap: 16px;
+      display: flex; align-items: center;
+      padding: 0 20px; gap: 16px;
       z-index: 100;
       transform: translateY(100%);
       transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
       box-shadow: 0 -4px 30px var(--shadow);
     }
-
-    .bottom-player.active {
-      transform: translateY(0);
-    }
+    .bottom-player.active { transform: translateY(0); }
 
     .bottom-player-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-      flex-shrink: 1;
+      display: flex; align-items: center; gap: 12px;
+      min-width: 0; flex-shrink: 1;
     }
-
     .bottom-player-thumb {
-      width: 44px;
-      height: 44px;
-      border-radius: 6px;
-      object-fit: cover;
-      flex-shrink: 0;
-      background: var(--bg-secondary);
+      width: 44px; height: 44px; border-radius: 6px;
+      object-fit: cover; flex-shrink: 0; background: var(--bg-secondary);
     }
-
-    .bottom-player-text {
-      min-width: 0;
-    }
-
+    .bottom-player-text { min-width: 0; }
     .bottom-player-title {
       font-family: var(--font-display);
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 0.85rem; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
+    .bottom-player-status { font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
 
-    .bottom-player-status {
-      font-size: 0.65rem;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .bottom-player-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
+    .bottom-player-controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
     .bottom-player-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: transparent;
-      border: 1px solid var(--border);
-      display: grid;
-      place-items: center;
-      cursor: pointer;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: transparent; border: 1px solid var(--border);
+      display: grid; place-items: center; cursor: pointer;
       transition: background var(--transition), border-color var(--transition);
     }
-
-    .bottom-player-btn:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: var(--border-light);
-    }
-
-    .bottom-player-btn svg {
-      width: 20px;
-      height: 20px;
-      fill: var(--text-primary);
-    }
+    .bottom-player-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--border-light); }
+    .bottom-player-btn svg { width: 20px; height: 20px; fill: var(--text-primary); }
 
     .bottom-player-bar-wrap {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 100px;
+      flex: 1; display: flex; align-items: center; gap: 8px; min-width: 100px;
     }
-
     .bottom-player-time {
-      font-size: 0.7rem;
-      color: var(--text-dim);
+      font-size: 0.7rem; color: var(--text-dim);
       font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-      min-width: 36px;
+      white-space: nowrap; min-width: 36px;
     }
 
     .bottom-player-progress {
-      flex: 1;
-      -webkit-appearance: none;
-      appearance: none;
-      height: 4px;
-      border-radius: 2px;
-      background: var(--border);
-      outline: none;
-      cursor: pointer;
+      flex: 1; -webkit-appearance: none; appearance: none;
+      height: 4px; border-radius: 2px;
+      background: var(--border); outline: none; cursor: pointer;
     }
-
     .bottom-player-progress::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--accent-amber);
-      border: 2px solid var(--bg-player);
-      cursor: pointer;
-      box-shadow: 0 0 6px var(--accent-amber-glow);
+      -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%;
+      background: var(--accent-amber); border: 2px solid var(--bg-player);
+      cursor: pointer; box-shadow: 0 0 6px var(--accent-amber-glow);
     }
-
     .bottom-player-progress::-moz-range-thumb {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--accent-amber);
-      border: 2px solid var(--bg-player);
-      cursor: pointer;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--accent-amber); border: 2px solid var(--bg-player); cursor: pointer;
     }
-
-    .bottom-player-progress::-moz-range-track {
-      height: 4px;
-      border-radius: 2px;
-      background: var(--border);
-    }
+    .bottom-player-progress::-moz-range-track { height: 4px; border-radius: 2px; background: var(--border); }
 
     /* ============================================================
        AUDIO ELEMENT (hidden)
        ============================================================ */
-    audio {
-      display: none;
-    }
+    audio { display: none; }
 
     /* ============================================================
        RESPONSIVE
        ============================================================ */
     @media (max-width: 768px) {
-      :root {
-        --player-height: 68px;
-      }
-
-      .site-header {
-        padding: 28px 16px 16px;
-      }
-
-      .container {
-        padding: 0 14px;
-      }
-
-      .hero-art {
-        aspect-ratio: 16 / 9;
-      }
-
-      .hero-overlay {
-        padding: 14px;
-      }
-
-      .hero-play-btn {
-        width: 56px;
-        height: 56px;
-      }
-
-      .hero-play-btn svg {
-        width: 26px;
-        height: 26px;
-      }
-
-      .hero-info {
-        padding: 14px 16px;
-      }
-
-      .listings {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 14px;
-      }
-
-      .bottom-player {
-        padding: 0 12px;
-        gap: 10px;
-      }
-
-      .bottom-player-thumb {
-        width: 36px;
-        height: 36px;
-      }
-
-      .bottom-player-title {
-        font-size: 0.75rem;
-      }
-
-      .bottom-player-btn {
-        width: 34px;
-        height: 34px;
-      }
-
-      .bottom-player-btn svg {
-        width: 16px;
-        height: 16px;
-      }
-
-      .bottom-player-time {
-        font-size: 0.6rem;
-        min-width: 28px;
-      }
+      :root { --player-height: 68px; --sidebar-width: 340px; }
+      .site-header { padding: 24px 16px 0; }
+      .container { padding: 0 14px; }
+      .hero-art { aspect-ratio: 16 / 9; }
+      .hero-overlay { padding: 14px; }
+      .hero-play-btn { width: 56px; height: 56px; }
+      .hero-play-btn svg { width: 26px; height: 26px; }
+      .hero-info { padding: 14px 16px; }
+      .listings { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+      .bottom-player { padding: 0 12px; gap: 10px; }
+      .bottom-player-thumb { width: 36px; height: 36px; }
+      .bottom-player-title { font-size: 0.75rem; }
+      .bottom-player-btn { width: 34px; height: 34px; }
+      .bottom-player-btn svg { width: 16px; height: 16px; }
+      .bottom-player-time { font-size: 0.6rem; min-width: 28px; }
+      .about-card { padding: 24px 20px; }
     }
 
     @media (max-width: 480px) {
-      :root {
-        --player-height: 60px;
-      }
-
-      .listings {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      .hero-card {
-        border-radius: var(--radius-sm);
-      }
-
-      .bottom-player {
-        padding: 0 10px;
-        gap: 6px;
-      }
-
-      .bottom-player-thumb {
-        display: none;
-      }
-
-      .bottom-player-bar-wrap {
-        min-width: 60px;
-      }
+      :root { --player-height: 60px; --sidebar-width: 100vw; }
+      .listings { grid-template-columns: 1fr; gap: 12px; }
+      .hero-card { border-radius: var(--radius-sm); }
+      .bottom-player { padding: 0 10px; gap: 6px; }
+      .bottom-player-thumb { display: none; }
+      .bottom-player-bar-wrap { min-width: 60px; }
+      .site-nav { gap: 2px; }
+      .nav-tab { font-size: 0.72rem; padding: 5px 12px; }
     }
 
     @media (orientation: landscape) and (max-height: 480px) {
-      :root {
-        --player-height: 56px;
-      }
-
-      .hero-art {
-        aspect-ratio: 3 / 1;
-        max-height: 200px;
-      }
-
-      .hero-play-btn {
-        width: 44px;
-        height: 44px;
-      }
-
-      .hero-play-btn svg {
-        width: 22px;
-        height: 22px;
-      }
+      :root { --player-height: 56px; }
+      .hero-art { aspect-ratio: 3 / 1; max-height: 200px; }
+      .hero-play-btn { width: 44px; height: 44px; }
+      .hero-play-btn svg { width: 22px; height: 22px; }
     }
   </style>
 </head>
@@ -1041,38 +766,76 @@
         <span class="site-title__jv">JV</span><span class="site-title__hub">Hub</span>
       </h1>
       <p class="site-tagline">Leave now, and save your ears</p>
+
+      <!-- NAV -->
+      <nav class="site-nav">
+        <button class="nav-tab active" data-tab="home">Home</button>
+        <button class="nav-tab" data-tab="about">About Me</button>
+      </nav>
+
+      <!-- SEARCH -->
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input class="search-input" id="searchInput" type="text" placeholder="Search tracks…" autocomplete="off" />
+      </div>
     </header>
 
-    <main class="container">
-      <!-- HERO: featured / latest track (populated by JS) -->
-      <section class="hero" id="hero" hidden>
-        <div class="hero-card" id="heroCard">
-          <div class="hero-art" id="heroArt">
-            <img id="heroImg" src="" alt="album art" loading="eager" />
-            <div class="hero-overlay">
-              <button class="hero-play-btn" id="heroPlayBtn" aria-label="Play">
-                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-              </button>
+    <!-- TAB: HOME -->
+    <div class="tab-page active" id="tab-home">
+      <main class="container">
+        <section class="hero" id="hero" hidden>
+          <div class="hero-card" id="heroCard">
+            <div class="hero-art" id="heroArt">
+              <img id="heroImg" src="" alt="album art" loading="eager" />
+              <div class="hero-overlay">
+                <button class="hero-play-btn" id="heroPlayBtn" aria-label="Play">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="hero-info">
+              <div>
+                <h2 id="heroTitle">Loading...</h2>
+                <div class="hero-meta" id="heroMeta">Latest track</div>
+              </div>
+              <span class="hero-badge">✦ Featured</span>
             </div>
           </div>
-          <div class="hero-info">
-            <div>
-              <h2 id="heroTitle">Loading...</h2>
-              <div class="hero-meta" id="heroMeta">Latest track</div>
-            </div>
-            <span class="hero-badge">✦ Featured</span>
-          </div>
+        </section>
+
+        <h2 class="section-title">All Tracks</h2>
+
+        <div id="listings" class="listings">
+          <div class="loading-msg">Loading...</div>
         </div>
-      </section>
+      </main>
+    </div>
 
-      <!-- SECTION TITLE -->
-      <h2 class="section-title">All Tracks</h2>
-
-      <!-- CARD GRID -->
-      <div id="listings" class="listings">
-        <div class="loading-msg">Loading...</div>
+    <!-- TAB: ABOUT ME -->
+    <div class="tab-page" id="tab-about">
+      <div class="about-page">
+        <div class="about-card">
+          <h2>About Me</h2>
+          <div class="about-sub">— the person behind the music</div>
+          <p>
+            This is a little corner of the internet where I share the sounds I've made, 
+            the covers I've recorded, and the tracks that mean something to me. It's not 
+            about algorithms or play counts — it's just music, made by one person, for 
+            whoever wants to listen.
+          </p>
+          <p>
+            I started making music as a way to unwind, and it slowly became something I 
+            couldn't imagine life without. Everything here was recorded in my own space, 
+            with whatever gear I had at the time. You'll hear imperfections, and that's 
+            kind of the point — it's honest.
+          </p>
+          <p>
+            If something here connects with you, drop a comment on the track. I read every 
+            one, and it genuinely means a lot. Thanks for listening.
+          </p>
+        </div>
       </div>
-    </main>
+    </div>
   </div>
 
   <!-- BOTTOM PERSISTENT PLAYER -->
@@ -1096,78 +859,144 @@
     </div>
   </div>
 
+  <!-- COMMENT SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- COMMENT SIDEBAR -->
+  <div class="comment-sidebar" id="commentSidebar">
+    <div class="sidebar-header">
+      <div>
+        <h3>Comments</h3>
+        <div class="sidebar-song-title" id="sidebarSongTitle">—</div>
+      </div>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close">✕</button>
+    </div>
+    <div class="sidebar-body">
+      <div class="sidebar-comment-form">
+        <input type="text" id="sidebarNameInput" placeholder="Your name" maxlength="30" />
+        <textarea id="sidebarBodyInput" placeholder="Leave a comment…" maxlength="500"></textarea>
+        <div class="sidebar-comment-form-row">
+          <button class="sidebar-comment-submit" id="sidebarSubmitBtn">Post</button>
+          <label class="sidebar-file-label">📎 Image/GIF
+            <input type="file" id="sidebarFileInput" accept="image/jpeg,image/png,image/gif,image/webp" />
+          </label>
+          <button class="sidebar-image-clear" id="sidebarImageClear" style="display:none">✕ Remove</button>
+        </div>
+        <div class="sidebar-image-preview" id="sidebarImagePreview" style="display:none">
+          <img class="sidebar-preview-img" id="sidebarPreviewImg" src="" alt="preview" />
+        </div>
+      </div>
+      <div class="sidebar-comments-list" id="sidebarCommentsList">
+        <div class="sidebar-comment-empty">Select a track to view comments</div>
+      </div>
+    </div>
+  </div>
+
   <script>
     /* ================================================================
-       JVHub Frontend — Redesigned
+       JVHub Frontend — Redesigned v2
        ================================================================ */
     (function() {
       'use strict';
 
       // DOM refs
-      const LISTINGS_EL = document.getElementById('listings');
-      const HERO_SEC    = document.getElementById('hero');
-      const HERO_TITLE  = document.getElementById('heroTitle');
-      const HERO_IMG    = document.getElementById('heroImg');
-      const HERO_PLAY   = document.getElementById('heroPlayBtn');
-      const HERO_CARD   = document.getElementById('heroCard');
+      const LISTINGS_EL     = document.getElementById('listings');
+      const HERO_SEC        = document.getElementById('hero');
+      const HERO_TITLE      = document.getElementById('heroTitle');
+      const HERO_IMG        = document.getElementById('heroImg');
+      const HERO_PLAY       = document.getElementById('heroPlayBtn');
+      const HERO_CARD       = document.getElementById('heroCard');
+      const BP              = document.getElementById('bottomPlayer');
+      const BP_THUMB        = document.getElementById('bpThumb');
+      const BP_TITLE        = document.getElementById('bpTitle');
+      const BP_STATUS       = document.getElementById('bpStatus');
+      const BP_CURRENT      = document.getElementById('bpCurrent');
+      const BP_REMAIN       = document.getElementById('bpRemaining');
+      const BP_PROGRESS     = document.getElementById('bpProgress');
+      const BP_PLAY_BTN     = document.getElementById('bpPlayBtn');
+      const SEARCH_INPUT    = document.getElementById('searchInput');
 
-      const BP          = document.getElementById('bottomPlayer');
-      const BP_THUMB    = document.getElementById('bpThumb');
-      const BP_TITLE    = document.getElementById('bpTitle');
-      const BP_STATUS   = document.getElementById('bpStatus');
-      const BP_CURRENT  = document.getElementById('bpCurrent');
-      const BP_REMAIN   = document.getElementById('bpRemaining');
-      const BP_PROGRESS = document.getElementById('bpProgress');
-      const BP_PLAY_BTN = document.getElementById('bpPlayBtn');
+      // Sidebar
+      const SIDEBAR         = document.getElementById('commentSidebar');
+      const SIDEBAR_OVERLAY = document.getElementById('sidebarOverlay');
+      const SIDEBAR_CLOSE   = document.getElementById('sidebarClose');
+      const SIDEBAR_TITLE   = document.getElementById('sidebarSongTitle');
+      const SIDEBAR_LIST    = document.getElementById('sidebarCommentsList');
+      const SIDEBAR_NAME    = document.getElementById('sidebarNameInput');
+      const SIDEBAR_BODY    = document.getElementById('sidebarBodyInput');
+      const SIDEBAR_SUBMIT  = document.getElementById('sidebarSubmitBtn');
+      const SIDEBAR_FILE    = document.getElementById('sidebarFileInput');
+      const SIDEBAR_CLEAR   = document.getElementById('sidebarImageClear');
+      const SIDEBAR_PREVIEW = document.getElementById('sidebarImagePreview');
+      const SIDEBAR_PREVIEW_IMG = document.getElementById('sidebarPreviewImg');
+
+      // Tabs
+      const NAV_TABS = document.querySelectorAll('.nav-tab');
+      const TAB_PAGES = {
+        home: document.getElementById('tab-home'),
+        about: document.getElementById('tab-about'),
+      };
 
       // Icons
       const ICON_PLAY  = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
       const ICON_PAUSE = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
 
       // State
-      let currentAudio  = null;
-      let currentSongId = null;
-      let isBPSeeking   = false;
-      let bpAnimFrame   = null;
+      let currentAudio       = null;
+      let currentSongId      = null;
+      let currentSongTitle   = '';
+      let currentSongCover   = '';
+      let isBPSeeking        = false;
+      let bpAnimFrame        = null;
+      let songsData          = [];
+      let sidebarSongId      = null;
+      let sidebarPendingFile = null;
 
       // ---------- helpers ----------
       function safeInt(s) {
-        const n = Number.parseInt(String(s || '').trim(), 10);
+        var n = Number.parseInt(String(s || '').trim(), 10);
         return Number.isFinite(n) ? n : 0;
       }
 
       function formatTime(seconds) {
         if (!Number.isFinite(seconds) || seconds < 0) return '--:--';
-        const s = Math.floor(seconds);
-        const h = Math.floor(s / 3600);
-        const m = Math.floor((s % 3600) / 60);
-        const r = s % 60;
+        var s = Math.floor(seconds);
+        var h = Math.floor(s / 3600);
+        var m = Math.floor((s % 3600) / 60);
+        var r = s % 60;
         if (h > 0) return h + ':' + String(m).padStart(2, '0') + ':' + String(r).padStart(2, '0');
         return m + ':' + String(r).padStart(2, '0');
       }
 
-      function voteStorageKey(songId) { return 'jvhub.vote.' + songId; }
+      function voteStorageKey(id) { return 'jvhub.vote.' + id; }
 
-      function getStoredVote(songId) {
+      function getStoredVote(id) {
         try {
-          const v = localStorage.getItem(voteStorageKey(songId));
+          var v = localStorage.getItem(voteStorageKey(id));
           return v === 'like' || v === 'dislike' ? v : null;
         } catch { return null; }
       }
 
-      function setStoredVote(songId, vote) {
+      function setStoredVote(id, vote) {
         try {
-          if (!vote) localStorage.removeItem(voteStorageKey(songId));
-          else localStorage.setItem(voteStorageKey(songId), vote);
+          if (!vote) localStorage.removeItem(voteStorageKey(id));
+          else localStorage.setItem(voteStorageKey(id), vote);
         } catch { /* ignore */ }
       }
 
       function timeAgo(ts) {
-        const diff = Math.floor((Date.now() - new Date(ts)) / 1000);
+        var diff = Math.floor((Date.now() - new Date(ts)) / 1000);
         if (diff < 60) return diff + 's ago';
         if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
         if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
         return Math.floor(diff / 86400) + 'd ago';
+      }
+
+      function formatDate(ts) {
+        var d = new Date(ts);
+        if (isNaN(d.getTime())) return '';
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
       }
 
       function escapeHtml(str) {
@@ -1179,18 +1008,18 @@
       }
 
       async function fetchJson(url, options) {
-        const res = await fetch(url, {
+        var res = await fetch(url, {
           headers: {
             'content-type': 'application/json',
             ...(options && options.headers ? options.headers : {}),
           },
           ...options,
         });
-        const text = await res.text();
-        let data = null;
+        var text = await res.text();
+        var data = null;
         try { data = text ? JSON.parse(text) : null; } catch { /* ignore */ }
         if (!res.ok) {
-          const msg = (data && (data.error || data.message)) || text || 'Request failed (' + res.status + ')';
+          var msg = (data && (data.error || data.message)) || text || 'Request failed (' + res.status + ')';
           throw new Error(msg);
         }
         return data;
@@ -1198,31 +1027,9 @@
 
       // ---------- waveform HTML ----------
       function waveformHtml() {
-        const bars = [];
-        for (let i = 0; i < 15; i++) {
-          bars.push('<span class="waveform-bar"></span>');
-        }
-        return '<div class="waveform">' + bars.join('') + '</div>';
-      }
-
-      // ---------- render comments ----------
-      function renderComments(listEl, comments) {
-        if (!comments || comments.length === 0) {
-          listEl.innerHTML = '<div class="comment-empty">No comments yet. Be first!</div>';
-          return;
-        }
-        listEl.innerHTML = comments.map(function(c) {
-          var imgHtml = '';
-          if (c.image_url) {
-            imgHtml = '<div class="comment-image"><img src="' + escapeHtml(c.image_url) + '" alt="comment image" loading="lazy" /></div>';
-          }
-          return '<div class="comment-item">' +
-            '<div class="comment-author">' + escapeHtml(c.author) + '</div>' +
-            '<div class="comment-body">' + escapeHtml(c.body) + '</div>' +
-            imgHtml +
-            '<div class="comment-time">' + timeAgo(c.created_at) + '</div>' +
-            '</div>';
-        }).join('');
+        var bars = '';
+        for (var i = 0; i < 15; i++) bars += '<span class="waveform-bar"></span>';
+        return '<div class="waveform">' + bars + '</div>';
       }
 
       // ---------- card HTML ----------
@@ -1231,8 +1038,9 @@
         var coverSrc = song.coverSrc || '';
         var title = song.title || song.filename || 'Untitled';
         var songId = song.id || '';
+        var dateStr = song.created_at ? formatDate(song.created_at) : '';
 
-        return '<div class="listing" data-song="' + escapeHtml(songId) + '" data-src="' + escapeHtml(audioSrc) + '" data-title="' + escapeHtml(title) + '" data-cover="' + escapeHtml(coverSrc) + '">' +
+        return '<div class="listing" data-song="' + escapeHtml(songId) + '" data-src="' + escapeHtml(audioSrc) + '" data-title="' + escapeHtml(title) + '" data-cover="' + escapeHtml(coverSrc) + '" data-date="' + escapeHtml(dateStr) + '">' +
           '<div class="card-art">' +
             '<img src="' + escapeHtml(coverSrc) + '" alt="' + escapeHtml(title) + '" loading="lazy" />' +
             '<div class="card-overlay">' +
@@ -1242,28 +1050,13 @@
           '</div>' +
           '<div class="card-info">' +
             '<div class="card-title">' + escapeHtml(title) + '</div>' +
-            '<div class="card-meta">' + (song.created_at ? timeAgo(song.created_at) : '') + '</div>' +
+            (dateStr ? '<div class="card-date">Added ' + escapeHtml(dateStr) + '</div>' : '') +
           '</div>' +
           '<div class="card-progress-wrap"><div class="card-progress-bar"></div></div>' +
           '<div class="card-actions">' +
             '<button class="rating-btn like" data-type="like"><span class="icon">♡</span><span class="rating-count">—</span></button>' +
             '<button class="rating-btn dislike" data-type="dislike"><span class="icon">♧</span><span class="rating-count">—</span></button>' +
-            '<button class="card-expand">Comments</button>' +
-          '</div>' +
-          '<div class="card-comments">' +
-            '<div class="comment-form">' +
-              '<input type="text" placeholder="Your name" maxlength="30" />' +
-              '<textarea placeholder="Leave a comment…" maxlength="500"></textarea>' +
-              '<div class="comment-form-row">' +
-                '<button class="comment-submit">Post</button>' +
-                '<label class="comment-file-label">📎 Image/GIF<input type="file" class="comment-file-input" accept="image/jpeg,image/png,image/gif,image/webp" /></label>' +
-                '<button class="comment-image-clear" style="display:none">✕ Remove</button>' +
-              '</div>' +
-              '<div class="comment-image-preview" style="display:none">' +
-                '<img class="comment-preview-img" src="" alt="preview" />' +
-              '</div>' +
-            '</div>' +
-            '<div class="comments-list"><div class="loading-msg">Loading...</div></div>' +
+            '<button class="card-comment-btn"><span>💬</span> Comments</button>' +
           '</div>' +
           '<audio src="' + escapeHtml(audioSrc) + '"></audio>' +
         '</div>';
@@ -1303,7 +1096,6 @@
           BP_PROGRESS.max = '0';
           BP_PROGRESS.value = '0';
         }
-        // Update card progress bars
         var listings = document.querySelectorAll('.listing');
         listings.forEach(function(li) {
           var bar = li.querySelector('.card-progress-bar');
@@ -1318,7 +1110,6 @@
       }
 
       function playSong(audio, listing, songId, title, cover) {
-        // Pause any current audio
         if (currentAudio && currentAudio !== audio) {
           var prevListing = currentAudio.closest('.listing');
           currentAudio.pause();
@@ -1326,7 +1117,6 @@
           currentAudio = null;
         }
 
-        // If same audio is paused, just resume
         if (audio === currentAudio && !audio.paused) {
           audio.pause();
           updateListingPlayState(listing, false);
@@ -1341,13 +1131,13 @@
 
         currentAudio = audio;
         currentSongId = songId;
+        currentSongTitle = title;
+        currentSongCover = cover;
 
-        // Show bottom player
         BP.classList.add('active');
         BP_THUMB.src = cover;
         BP_TITLE.textContent = title;
 
-        // Reset
         if (Number.isFinite(audio.duration) && audio.duration > 0 && audio.currentTime >= audio.duration) {
           audio.currentTime = 0;
         }
@@ -1357,30 +1147,59 @@
         updateHeroPlayState(true);
         updateBottomPlayerPlayState(true);
 
-        // Sync bottom player
         if (bpAnimFrame) cancelAnimationFrame(bpAnimFrame);
         bpAnimFrame = requestAnimationFrame(syncBP);
-
-        // Update hero if this is the featured track
-        if (listing.dataset.song === HERO_CARD.dataset.song) {
-          updateHeroPlayState(true);
-        }
       }
 
-      // ---------- stop all ----------
-      function stopAll() {
-        if (currentAudio) {
-          currentAudio.pause();
-          var l = currentAudio.closest('.listing');
-          if (l) updateListingPlayState(l, false);
-          updateHeroPlayState(false);
-          updateBottomPlayerPlayState(false);
-          currentAudio = null;
-          currentSongId = null;
+      // ---------- sidebar ----------
+      function openSidebar(songId, songTitle) {
+        sidebarSongId = songId;
+        SIDEBAR_TITLE.textContent = songTitle || '—';
+        SIDEBAR_LIST.innerHTML = '<div class="sidebar-comment-empty">Loading...</div>';
+        SIDEBAR_OVERLAY.classList.add('open');
+        SIDEBAR.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        loadSidebarComments(songId);
+      }
+
+      function closeSidebar() {
+        sidebarSongId = null;
+        sidebarPendingFile = null;
+        SIDEBAR_NAME.value = '';
+        SIDEBAR_BODY.value = '';
+        SIDEBAR_FILE.value = '';
+        SIDEBAR_PREVIEW.style.display = 'none';
+        SIDEBAR_PREVIEW_IMG.src = '';
+        SIDEBAR_CLEAR.style.display = 'none';
+        SIDEBAR_OVERLAY.classList.remove('open');
+        SIDEBAR.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      async function loadSidebarComments(songId) {
+        if (!songId) return;
+        try {
+          var data = await fetchJson('/api/comments?song_id=' + encodeURIComponent(songId));
+          var comments = (data && data.comments) || [];
+          if (!comments.length) {
+            SIDEBAR_LIST.innerHTML = '<div class="sidebar-comment-empty">No comments yet. Be the first!</div>';
+            return;
+          }
+          SIDEBAR_LIST.innerHTML = comments.map(function(c) {
+            var imgHtml = '';
+            if (c.image_url) {
+              imgHtml = '<div class="sidebar-comment-image"><img src="' + escapeHtml(c.image_url) + '" alt="comment image" loading="lazy" /></div>';
+            }
+            return '<div class="sidebar-comment-item">' +
+              '<div class="sidebar-comment-author">' + escapeHtml(c.author) + '</div>' +
+              '<div class="sidebar-comment-body">' + escapeHtml(c.body) + '</div>' +
+              imgHtml +
+              '<div class="sidebar-comment-time">' + timeAgo(c.created_at) + '</div>' +
+              '</div>';
+          }).join('');
+        } catch (e) {
+          SIDEBAR_LIST.innerHTML = '<div class="sidebar-comment-empty">Failed to load comments.</div>';
         }
-        if (bpAnimFrame) cancelAnimationFrame(bpAnimFrame);
-        BP.classList.remove('active');
-        document.querySelectorAll('.card-progress-bar').forEach(function(b) { b.style.width = '0%'; });
       }
 
       // ---------- attach card interactions ----------
@@ -1394,18 +1213,8 @@
         var dislikeBtn = listing.querySelector('.rating-btn.dislike');
         var likeCount = likeBtn.querySelector('.rating-count');
         var dislikeCount = dislikeBtn.querySelector('.rating-count');
-        var expandBtn = listing.querySelector('.card-expand');
-        var commentsSection = listing.querySelector('.card-comments');
-        var commentsList = listing.querySelector('.comments-list');
-        var nameInput = listing.querySelector('.comment-form input[type="text"]');
-        var bodyInput = listing.querySelector('.comment-form textarea');
-        var submitBtn = listing.querySelector('.comment-submit');
-        var fileInput = listing.querySelector('.comment-file-input');
-        var clearBtn = listing.querySelector('.comment-image-clear');
-        var previewWrap = listing.querySelector('.comment-image-preview');
-        var previewImg = listing.querySelector('.comment-preview-img');
+        var commentBtn = listing.querySelector('.card-comment-btn');
 
-        var pendingFile = null;
         var myVote = getStoredVote(songId);
         if (myVote === 'like') likeBtn.classList.add('active');
         if (myVote === 'dislike') dislikeBtn.classList.add('active');
@@ -1488,91 +1297,10 @@
           });
         });
 
-        // ---------- comments toggle ----------
-        var commentsOpen = false;
-        expandBtn.addEventListener('click', function() {
-          commentsOpen = !commentsOpen;
-          commentsSection.classList.toggle('open', commentsOpen);
-          expandBtn.textContent = commentsOpen ? 'Close' : 'Comments';
-          if (commentsOpen) refreshComments();
-        });
-
-        function refreshComments() {
-          fetchJson('/api/comments?song_id=' + encodeURIComponent(songId)).then(function(data) {
-            renderComments(commentsList, data.comments || []);
-          }).catch(function() {});
-        }
-
-        // ---------- comment image handling ----------
-        fileInput.addEventListener('change', function() {
-          var file = fileInput.files && fileInput.files[0];
-          if (!file) return;
-          if (file.size > 5 * 1024 * 1024) {
-            alert('Image must be under 5 MB');
-            fileInput.value = '';
-            return;
-          }
-          pendingFile = file;
-          var reader = new FileReader();
-          reader.onload = function(e) {
-            previewImg.src = e.target.result;
-            previewWrap.style.display = 'block';
-            clearBtn.style.display = 'inline-block';
-          };
-          reader.readAsDataURL(file);
-        });
-
-        clearBtn.addEventListener('click', function() {
-          pendingFile = null;
-          fileInput.value = '';
-          previewImg.src = '';
-          previewWrap.style.display = 'none';
-          clearBtn.style.display = 'none';
-        });
-
-        // ---------- comment submit ----------
-        submitBtn.addEventListener('click', async function() {
-          var author = nameInput.value.trim();
-          var body = bodyInput.value.trim();
-          if (!author || !body) return;
-
-          submitBtn.disabled = true;
-          var imageUrl = null;
-
-          if (pendingFile) {
-            submitBtn.textContent = 'Uploading…';
-            try {
-              var reader = new FileReader();
-              var dataUrl = await new Promise(function(resolve, reject) {
-                reader.onload = function(e) { resolve(e.target.result); };
-                reader.onerror = reject;
-                reader.readAsDataURL(pendingFile);
-              });
-              var result = await fetchJson('/api/upload', {
-                method: 'POST',
-                body: JSON.stringify({ dataUrl: dataUrl, filename: pendingFile.name }),
-              });
-              imageUrl = result.url || null;
-            } catch (e) { imageUrl = null; }
-          }
-
-          submitBtn.textContent = 'Posting…';
-          try {
-            await fetchJson('/api/comments', {
-              method: 'POST',
-              body: JSON.stringify({ song_id: songId, author: author, body: body, image_url: imageUrl || null }),
-            });
-            nameInput.value = '';
-            bodyInput.value = '';
-            pendingFile = null;
-            fileInput.value = '';
-            previewImg.src = '';
-            previewWrap.style.display = 'none';
-            clearBtn.style.display = 'none';
-            await refreshComments();
-          } catch (e) { /* ignore */ }
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Post';
+        // ---------- comments (sidebar) ----------
+        commentBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          openSidebar(songId, title);
         });
       }
 
@@ -1587,9 +1315,7 @@
         if (playBtn) playBtn.click();
       });
 
-      // ---------- top-level click on hero card (play) ----------
       HERO_CARD.addEventListener('click', function(e) {
-        // If click is directly on something that's not a button, trigger play
         if (e.target.closest('button')) return;
         var heroSongId = HERO_CARD.dataset.song;
         if (!heroSongId) return;
@@ -1599,7 +1325,7 @@
         if (playBtn) playBtn.click();
       });
 
-      // ---------- bottom player play/pause ----------
+      // ---------- bottom player ----------
       BP_PLAY_BTN.addEventListener('click', function() {
         if (!currentAudio) return;
         if (currentAudio.paused) {
@@ -1619,7 +1345,6 @@
         }
       });
 
-      // ---------- bottom player seek ----------
       BP_PROGRESS.addEventListener('pointerdown', function() { isBPSeeking = true; });
       BP_PROGRESS.addEventListener('pointerup', function() {
         isBPSeeking = false;
@@ -1642,11 +1367,103 @@
         }
       });
 
-      // ---------- hero audio ended handling ----------
-      document.addEventListener('ended', function(e) {
-        if (e.target.tagName !== 'AUDIO') return;
-        // handled per-audio above
-      }, true);
+      // ---------- sidebar close ----------
+      SIDEBAR_CLOSE.addEventListener('click', closeSidebar);
+      SIDEBAR_OVERLAY.addEventListener('click', closeSidebar);
+
+      // ---------- sidebar file handling ----------
+      SIDEBAR_FILE.addEventListener('change', function() {
+        var file = SIDEBAR_FILE.files && SIDEBAR_FILE.files[0];
+        if (!file) return;
+        if (file.size > 5 * 1024 * 1024) {
+          alert('Image must be under 5 MB');
+          SIDEBAR_FILE.value = '';
+          return;
+        }
+        sidebarPendingFile = file;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          SIDEBAR_PREVIEW_IMG.src = e.target.result;
+          SIDEBAR_PREVIEW.style.display = 'block';
+          SIDEBAR_CLEAR.style.display = 'inline-block';
+        };
+        reader.readAsDataURL(file);
+      });
+
+      SIDEBAR_CLEAR.addEventListener('click', function() {
+        sidebarPendingFile = null;
+        SIDEBAR_FILE.value = '';
+        SIDEBAR_PREVIEW_IMG.src = '';
+        SIDEBAR_PREVIEW.style.display = 'none';
+        SIDEBAR_CLEAR.style.display = 'none';
+      });
+
+      // ---------- sidebar comment submit ----------
+      SIDEBAR_SUBMIT.addEventListener('click', async function() {
+        var author = SIDEBAR_NAME.value.trim();
+        var body = SIDEBAR_BODY.value.trim();
+        if (!author || !body || !sidebarSongId) return;
+
+        SIDEBAR_SUBMIT.disabled = true;
+        var imageUrl = null;
+
+        if (sidebarPendingFile) {
+          SIDEBAR_SUBMIT.textContent = 'Uploading…';
+          try {
+            var reader = new FileReader();
+            var dataUrl = await new Promise(function(resolve, reject) {
+              reader.onload = function(e) { resolve(e.target.result); };
+              reader.onerror = reject;
+              reader.readAsDataURL(sidebarPendingFile);
+            });
+            var result = await fetchJson('/api/upload', {
+              method: 'POST',
+              body: JSON.stringify({ dataUrl: dataUrl, filename: sidebarPendingFile.name }),
+            });
+            imageUrl = result.url || null;
+          } catch (e) { imageUrl = null; }
+        }
+
+        SIDEBAR_SUBMIT.textContent = 'Posting…';
+        try {
+          await fetchJson('/api/comments', {
+            method: 'POST',
+            body: JSON.stringify({ song_id: sidebarSongId, author: author, body: body, image_url: imageUrl || null }),
+          });
+          SIDEBAR_NAME.value = '';
+          SIDEBAR_BODY.value = '';
+          sidebarPendingFile = null;
+          SIDEBAR_FILE.value = '';
+          SIDEBAR_PREVIEW_IMG.src = '';
+          SIDEBAR_PREVIEW.style.display = 'none';
+          SIDEBAR_CLEAR.style.display = 'none';
+          await loadSidebarComments(sidebarSongId);
+        } catch (e) { /* ignore */ }
+        SIDEBAR_SUBMIT.disabled = false;
+        SIDEBAR_SUBMIT.textContent = 'Post';
+      });
+
+      // ---------- tabs ----------
+      NAV_TABS.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          NAV_TABS.forEach(function(t) { t.classList.remove('active'); });
+          tab.classList.add('active');
+          var target = tab.dataset.tab;
+          Object.keys(TAB_PAGES).forEach(function(key) {
+            TAB_PAGES[key].classList.toggle('active', key === target);
+          });
+        });
+      });
+
+      // ---------- search ----------
+      SEARCH_INPUT.addEventListener('input', function() {
+        var query = SEARCH_INPUT.value.trim().toLowerCase();
+        var cards = document.querySelectorAll('.listing');
+        cards.forEach(function(card) {
+          var title = (card.dataset.title || '').toLowerCase();
+          card.style.display = (!query || title.indexOf(query) !== -1) ? '' : 'none';
+        });
+      });
 
       // ---------- main init ----------
       async function init() {
@@ -1658,11 +1475,12 @@
             return;
           }
 
-          // Build card grid
+          songsData = songs;
+
+          // Songs already ordered by created_at desc from API (most recent first)
           LISTINGS_EL.innerHTML = songs.map(songCardHtml).join('');
           LISTINGS_EL.querySelectorAll('.listing').forEach(wireListingData);
 
-          // Set up hero with first (latest) track
           var latest = songs[0];
           HERO_IMG.src = latest.coverSrc || '';
           HERO_TITLE.textContent = latest.title || latest.filename || 'Untitled';
@@ -1670,7 +1488,6 @@
           HERO_CARD.dataset.src = latest.audioSrc || '';
           HERO_SEC.hidden = false;
 
-          // When hero track ends, reset
           var heroListing = document.querySelector('.listing[data-song="' + latest.id + '"]');
           if (heroListing) {
             var heroAudio = heroListing.querySelector('audio');
