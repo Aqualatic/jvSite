@@ -68,7 +68,7 @@
       background-size: 256px 256px;
     }
 
-    /* Gradient mesh background vignette */
+    /* Gradient mesh background vignette — deeper, warmer glow */
     body::after {
       content: '';
       position: fixed;
@@ -76,9 +76,10 @@
       z-index: 0;
       pointer-events: none;
       background:
-        radial-gradient(ellipse 80% 60% at 20% 20%, rgba(196, 149, 106, 0.04) 0%, transparent 70%),
-        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(181, 131, 141, 0.05) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(201, 169, 110, 0.03) 0%, transparent 60%);
+        radial-gradient(ellipse 70% 50% at 15% 25%, rgba(196, 149, 106, 0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 85% 75%, rgba(181, 131, 141, 0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 50% 15%, rgba(201, 169, 110, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse 30% 20% at 70% 30%, rgba(110, 140, 200, 0.03) 0%, transparent 40%);
     }
 
     .site-wrap { position: relative; z-index: 1; }
@@ -995,6 +996,11 @@
       function formatDate(ts) {
         var d = new Date(ts);
         if (isNaN(d.getTime())) return '';
+        var diff = Math.floor((Date.now() - d) / 1000);
+        if (diff < 60) return 'just now';
+        if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+        if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+        if (diff < 86400 * 30) return Math.floor(diff / 86400) + 'd ago';
         var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
       }
@@ -1050,7 +1056,7 @@
           '</div>' +
           '<div class="card-info">' +
             '<div class="card-title">' + escapeHtml(title) + '</div>' +
-            (dateStr ? '<div class="card-date">Added ' + escapeHtml(dateStr) + '</div>' : '') +
+            (dateStr ? '<div class="card-date">' + escapeHtml(dateStr) + '</div>' : '') +
           '</div>' +
           '<div class="card-progress-wrap"><div class="card-progress-bar"></div></div>' +
           '<div class="card-actions">' +
@@ -1459,10 +1465,15 @@
       SEARCH_INPUT.addEventListener('input', function() {
         var query = SEARCH_INPUT.value.trim().toLowerCase();
         var cards = document.querySelectorAll('.listing');
+        var hasVisible = false;
         cards.forEach(function(card) {
           var title = (card.dataset.title || '').toLowerCase();
-          card.style.display = (!query || title.indexOf(query) !== -1) ? '' : 'none';
+          var match = !query || title.indexOf(query) !== -1;
+          card.style.display = match ? '' : 'none';
+          if (match) hasVisible = true;
         });
+        // Hide hero when searching, show when cleared
+        HERO_SEC.style.display = query ? 'none' : '';
       });
 
       // ---------- main init ----------
