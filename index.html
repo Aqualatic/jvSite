@@ -186,8 +186,129 @@
     .tab-page { display: none; }
     .tab-page.active { display: block; }
 
-    /* About Me page */
-    .about-page { max-width: 700px; margin: 40px auto; padding: 0 20px; }
+    /* ============================================================
+       ANALYTICS PAGE
+       ============================================================ */
+    .analytics-page { max-width: 900px; margin: 40px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 24px; }
+
+    .analytics-stat-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+
+    .analytics-stat-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px 20px; text-align: center;
+    }
+    .analytics-stat-card .stat-value {
+      font-family: var(--font-display); font-size: 2.2rem; font-weight: 700;
+      color: var(--accent-amber); line-height: 1;
+    }
+    .analytics-stat-card .stat-label {
+      font-size: 0.75rem; color: var(--text-secondary); margin-top: 6px;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    .analytics-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+    }
+    .analytics-card h3 {
+      font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
+      margin-bottom: 20px; color: var(--text-primary);
+    }
+
+    .analytics-canvas-wrap { position: relative; width: 100%; }
+    .analytics-canvas-wrap canvas { width: 100% !important; display: block; }
+
+    .analytics-loading {
+      text-align: center; color: var(--text-dim); font-size: 0.85rem; padding: 40px 0;
+    }
+
+    .analytics-track-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .analytics-track-row:last-child { border-bottom: none; }
+    .analytics-track-rank {
+      font-size: 0.75rem; color: var(--text-dim); min-width: 20px; text-align: right;
+    }
+    .analytics-track-title {
+      flex: 1; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .analytics-track-bar-wrap { width: 120px; height: 6px; background: var(--border); border-radius: 3px; flex-shrink: 0; }
+    .analytics-track-bar { height: 100%; background: var(--accent-amber); border-radius: 3px; transition: width 0.6s ease; }
+    .analytics-track-count { font-size: 0.75rem; color: var(--text-secondary); min-width: 32px; text-align: right; flex-shrink: 0; }
+
+    @media (max-width: 600px) {
+      .analytics-stat-row { grid-template-columns: 1fr 1fr; }
+      .analytics-stat-row .analytics-stat-card:last-child { grid-column: 1 / -1; }
+    }
+
+    /* ============================================================
+       TIMESTAMP COMMENTS
+       ============================================================ */
+    .comment-timestamp-btn {
+      background: var(--accent-amber-glow); border: 1px solid rgba(196,149,106,0.3);
+      color: var(--accent-amber); font-size: 0.7rem; font-family: var(--font-body);
+      padding: 2px 8px; border-radius: 100px; cursor: pointer;
+      transition: background var(--transition); white-space: nowrap;
+    }
+    .comment-timestamp-btn:hover { background: rgba(196,149,106,0.3); }
+
+    .sidebar-timestamp-row {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .sidebar-add-timestamp {
+      background: none; border: 1px dashed var(--border); color: var(--text-dim);
+      font-family: var(--font-body); font-size: 0.72rem;
+      padding: 4px 10px; border-radius: 100px; cursor: pointer;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .sidebar-add-timestamp:hover { color: var(--accent-amber); border-color: rgba(196,149,106,0.4); }
+    .sidebar-timestamp-preview {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent-amber-glow); border: 1px solid rgba(196,149,106,0.3);
+      color: var(--accent-amber); font-size: 0.72rem; padding: 4px 10px; border-radius: 100px;
+    }
+    .sidebar-timestamp-clear {
+      background: none; border: none; color: var(--accent-amber);
+      cursor: pointer; font-size: 0.9rem; line-height: 1; padding: 0;
+    }
+
+    /* ============================================================
+       SHARE BUTTON & TOAST
+       ============================================================ */
+    .card-share-btn {
+      background: none; border: none; color: var(--text-dim);
+      cursor: pointer; font-family: var(--font-body);
+      font-size: 0.72rem; padding: 4px 8px; border-radius: 6px;
+      transition: color var(--transition), background var(--transition);
+      display: flex; align-items: center; gap: 4px;
+    }
+    .card-share-btn:hover { color: var(--text-secondary); background: rgba(255,255,255,0.04); }
+
+    .share-toast {
+      position: fixed; bottom: calc(var(--player-height) + 16px); left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--bg-card); border: 1px solid var(--border-light);
+      color: var(--accent-amber); font-size: 0.8rem; font-family: var(--font-body);
+      padding: 8px 18px; border-radius: 100px;
+      box-shadow: 0 4px 20px var(--shadow);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 300; white-space: nowrap;
+    }
+    .share-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ============================================================
+       QUEUE / BOTTOM PLAYER EXTRA CONTROLS
+       ============================================================ */
+    .bottom-player-btn.active { background: var(--accent-amber-glow); border-color: var(--accent-amber); }
+    .bottom-player-btn.active svg { fill: var(--accent-amber); }
+
+    /* ============================================================
+       ABOUT ME page (unchanged, kept here for completeness)
+       ============================================================ */
     .about-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -771,6 +892,7 @@
       <!-- NAV -->
       <nav class="site-nav">
         <button class="nav-tab active" data-tab="home">Home</button>
+        <button class="nav-tab" data-tab="analytics">Stats</button>
         <button class="nav-tab" data-tab="about">About Me</button>
       </nav>
 
@@ -810,6 +932,29 @@
           <div class="loading-msg">Loading...</div>
         </div>
       </main>
+    </div>
+
+    <!-- TAB: ANALYTICS -->
+    <div class="tab-page" id="tab-analytics">
+      <div class="analytics-page">
+        <div class="analytics-stat-row" id="analyticsStatRow">
+          <div class="analytics-stat-card"><div class="stat-value" id="statTotalPlays">—</div><div class="stat-label">Total Plays</div></div>
+          <div class="analytics-stat-card"><div class="stat-value" id="statTotalLikes">—</div><div class="stat-label">Total Likes</div></div>
+          <div class="analytics-stat-card"><div class="stat-value" id="statTotalSongs">—</div><div class="stat-label">Tracks</div></div>
+        </div>
+        <div class="analytics-card">
+          <h3>Plays — Last 30 Days</h3>
+          <div class="analytics-canvas-wrap"><canvas id="analyticsTimelineChart" height="140"></canvas></div>
+        </div>
+        <div class="analytics-card">
+          <h3>Top Tracks by Plays</h3>
+          <div id="analyticsTrackList"><div class="analytics-loading">Loading stats…</div></div>
+        </div>
+        <div class="analytics-card">
+          <h3>Top Tracks by Likes</h3>
+          <div id="analyticsLikeList"><div class="analytics-loading">Loading stats…</div></div>
+        </div>
+      </div>
     </div>
 
     <!-- TAB: ABOUT ME -->
@@ -854,11 +999,23 @@
       <span class="bottom-player-time" id="bpRemaining">-0:00</span>
     </div>
     <div class="bottom-player-controls">
+      <button class="bottom-player-btn" id="bpShuffleBtn" aria-label="Shuffle">
+        <svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 8.46 20 10.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+      </button>
+      <button class="bottom-player-btn" id="bpPrevBtn" aria-label="Previous">
+        <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+      </button>
       <button class="bottom-player-btn" id="bpPlayBtn" aria-label="Play">
         <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
       </button>
+      <button class="bottom-player-btn" id="bpNextBtn" aria-label="Next">
+        <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+      </button>
     </div>
   </div>
+
+  <!-- SHARE TOAST -->
+  <div class="share-toast" id="shareToast">🔗 Link copied!</div>
 
   <!-- COMMENT SIDEBAR OVERLAY -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -883,6 +1040,13 @@
           </label>
           <button class="sidebar-image-clear" id="sidebarImageClear" style="display:none">✕ Remove</button>
         </div>
+        <div class="sidebar-timestamp-row">
+          <button class="sidebar-add-timestamp" id="sidebarAddTimestamp" type="button">⏱ Add timestamp</button>
+          <span class="sidebar-timestamp-preview" id="sidebarTimestampPreview" style="display:none">
+            <span id="sidebarTimestampLabel">0:00</span>
+            <button class="sidebar-timestamp-clear" id="sidebarTimestampClear" type="button" aria-label="Remove timestamp">✕</button>
+          </span>
+        </div>
         <div class="sidebar-image-preview" id="sidebarImagePreview" style="display:none">
           <img class="sidebar-preview-img" id="sidebarPreviewImg" src="" alt="preview" />
         </div>
@@ -895,7 +1059,7 @@
 
   <script>
     /* ================================================================
-       JVHub Frontend — Redesigned v2
+       JVHub Frontend — v3 (share, queue, play-tracking, timestamps, analytics)
        ================================================================ */
     (function() {
       'use strict';
@@ -915,27 +1079,36 @@
       const BP_REMAIN       = document.getElementById('bpRemaining');
       const BP_PROGRESS     = document.getElementById('bpProgress');
       const BP_PLAY_BTN     = document.getElementById('bpPlayBtn');
+      const BP_PREV_BTN     = document.getElementById('bpPrevBtn');
+      const BP_NEXT_BTN     = document.getElementById('bpNextBtn');
+      const BP_SHUFFLE_BTN  = document.getElementById('bpShuffleBtn');
       const SEARCH_INPUT    = document.getElementById('searchInput');
+      const SHARE_TOAST     = document.getElementById('shareToast');
 
       // Sidebar
-      const SIDEBAR         = document.getElementById('commentSidebar');
-      const SIDEBAR_OVERLAY = document.getElementById('sidebarOverlay');
-      const SIDEBAR_CLOSE   = document.getElementById('sidebarClose');
-      const SIDEBAR_TITLE   = document.getElementById('sidebarSongTitle');
-      const SIDEBAR_LIST    = document.getElementById('sidebarCommentsList');
-      const SIDEBAR_NAME    = document.getElementById('sidebarNameInput');
-      const SIDEBAR_BODY    = document.getElementById('sidebarBodyInput');
-      const SIDEBAR_SUBMIT  = document.getElementById('sidebarSubmitBtn');
-      const SIDEBAR_FILE    = document.getElementById('sidebarFileInput');
-      const SIDEBAR_CLEAR   = document.getElementById('sidebarImageClear');
-      const SIDEBAR_PREVIEW = document.getElementById('sidebarImagePreview');
-      const SIDEBAR_PREVIEW_IMG = document.getElementById('sidebarPreviewImg');
+      const SIDEBAR              = document.getElementById('commentSidebar');
+      const SIDEBAR_OVERLAY      = document.getElementById('sidebarOverlay');
+      const SIDEBAR_CLOSE        = document.getElementById('sidebarClose');
+      const SIDEBAR_TITLE        = document.getElementById('sidebarSongTitle');
+      const SIDEBAR_LIST         = document.getElementById('sidebarCommentsList');
+      const SIDEBAR_NAME         = document.getElementById('sidebarNameInput');
+      const SIDEBAR_BODY         = document.getElementById('sidebarBodyInput');
+      const SIDEBAR_SUBMIT       = document.getElementById('sidebarSubmitBtn');
+      const SIDEBAR_FILE         = document.getElementById('sidebarFileInput');
+      const SIDEBAR_CLEAR        = document.getElementById('sidebarImageClear');
+      const SIDEBAR_PREVIEW      = document.getElementById('sidebarImagePreview');
+      const SIDEBAR_PREVIEW_IMG  = document.getElementById('sidebarPreviewImg');
+      const SIDEBAR_ADD_TS       = document.getElementById('sidebarAddTimestamp');
+      const SIDEBAR_TS_PREVIEW   = document.getElementById('sidebarTimestampPreview');
+      const SIDEBAR_TS_LABEL     = document.getElementById('sidebarTimestampLabel');
+      const SIDEBAR_TS_CLEAR     = document.getElementById('sidebarTimestampClear');
 
       // Tabs
       const NAV_TABS = document.querySelectorAll('.nav-tab');
       const TAB_PAGES = {
-        home: document.getElementById('tab-home'),
-        about: document.getElementById('tab-about'),
+        home:      document.getElementById('tab-home'),
+        analytics: document.getElementById('tab-analytics'),
+        about:     document.getElementById('tab-about'),
       };
 
       // Icons
@@ -943,15 +1116,26 @@
       const ICON_PAUSE = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
 
       // State
-      let currentAudio       = null;
-      let currentSongId      = null;
-      let currentSongTitle   = '';
-      let currentSongCover   = '';
-      let isBPSeeking        = false;
-      let bpAnimFrame        = null;
-      let songsData          = [];
-      let sidebarSongId      = null;
-      let sidebarPendingFile = null;
+      let currentAudio        = null;
+      let currentSongId       = null;
+      let currentSongTitle    = '';
+      let currentSongCover    = '';
+      let isBPSeeking         = false;
+      let bpAnimFrame         = null;
+      let songsData           = [];
+      let sidebarSongId       = null;
+      let sidebarPendingFile  = null;
+      let sidebarTimestamp    = null; // seconds or null
+      let analyticsLoaded     = false;
+
+      // Queue state
+      let queue         = [];   // array of song IDs in play order
+      let queueIndex    = -1;
+      let isShuffled    = false;
+
+      // Play-tracking debounce: song_id -> timestamp of last tracked play
+      const playTracked = {};
+      const PLAY_DEBOUNCE_MS = 30000; // 30s
 
       // ---------- helpers ----------
       function safeInt(s) {
@@ -1007,10 +1191,10 @@
 
       function escapeHtml(str) {
         return String(str)
-          .replace(/&/g, '&')
-          .replace(/</g, '<')
-          .replace(/>/g, '>')
-          .replace(/"/g, '"');
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
       }
 
       async function fetchJson(url, options) {
@@ -1029,6 +1213,64 @@
           throw new Error(msg);
         }
         return data;
+      }
+
+      // ---------- play tracking ----------
+      function trackPlay(songId) {
+        if (!songId) return;
+        var now = Date.now();
+        if (playTracked[songId] && now - playTracked[songId] < PLAY_DEBOUNCE_MS) return;
+        playTracked[songId] = now;
+        fetchJson('/api/plays', {
+          method: 'POST',
+          body: JSON.stringify({ song_id: songId }),
+        }).catch(function() { /* non-critical */ });
+      }
+
+      // ---------- share ----------
+      var toastTimer = null;
+      function showShareToast() {
+        SHARE_TOAST.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function() { SHARE_TOAST.classList.remove('show'); }, 2500);
+      }
+
+      function shareSong(songId) {
+        var url = location.origin + location.pathname + '?song=' + encodeURIComponent(songId);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(showShareToast).catch(function() {
+            prompt('Copy this link:', url);
+          });
+        } else {
+          prompt('Copy this link:', url);
+        }
+      }
+
+      // ---------- queue ----------
+      function buildQueue(startSongId) {
+        var ids = songsData.map(function(s) { return s.id; });
+        if (isShuffled) {
+          // Fisher-Yates shuffle
+          for (var i = ids.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = ids[i]; ids[i] = ids[j]; ids[j] = tmp;
+          }
+          // move startSongId to front if present
+          var si = ids.indexOf(startSongId);
+          if (si > 0) { ids.splice(si, 1); ids.unshift(startSongId); }
+        }
+        queue = ids;
+        queueIndex = ids.indexOf(startSongId);
+      }
+
+      function playByQueueIndex(idx) {
+        if (idx < 0 || idx >= queue.length) return;
+        queueIndex = idx;
+        var songId = queue[idx];
+        var listing = document.querySelector('.listing[data-song="' + songId + '"]');
+        if (!listing) return;
+        var playBtn = listing.querySelector('.card-play-btn');
+        if (playBtn) playBtn.click();
       }
 
       // ---------- waveform HTML ----------
@@ -1063,6 +1305,7 @@
             '<button class="rating-btn like" data-type="like"><span class="icon">♡</span><span class="rating-count">—</span></button>' +
             '<button class="rating-btn dislike" data-type="dislike"><span class="icon">♧</span><span class="rating-count">—</span></button>' +
             '<button class="card-comment-btn"><span>💬</span> Comments</button>' +
+            '<button class="card-share-btn" aria-label="Share">🔗 Share</button>' +
           '</div>' +
           '<audio src="' + escapeHtml(audioSrc) + '"></audio>' +
         '</div>';
@@ -1140,6 +1383,12 @@
         currentSongTitle = title;
         currentSongCover = cover;
 
+        // Update queue position
+        if (queue.length > 0) {
+          var qi = queue.indexOf(songId);
+          if (qi !== -1) queueIndex = qi;
+        }
+
         BP.classList.add('active');
         BP_THUMB.src = cover;
         BP_TITLE.textContent = title;
@@ -1155,11 +1404,15 @@
 
         if (bpAnimFrame) cancelAnimationFrame(bpAnimFrame);
         bpAnimFrame = requestAnimationFrame(syncBP);
+
+        trackPlay(songId);
       }
 
       // ---------- sidebar ----------
       function openSidebar(songId, songTitle) {
         sidebarSongId = songId;
+        sidebarTimestamp = null;
+        SIDEBAR_TS_PREVIEW.style.display = 'none';
         SIDEBAR_TITLE.textContent = songTitle || '—';
         SIDEBAR_LIST.innerHTML = '<div class="sidebar-comment-empty">Loading...</div>';
         SIDEBAR_OVERLAY.classList.add('open');
@@ -1171,12 +1424,14 @@
       function closeSidebar() {
         sidebarSongId = null;
         sidebarPendingFile = null;
+        sidebarTimestamp = null;
         SIDEBAR_NAME.value = '';
         SIDEBAR_BODY.value = '';
         SIDEBAR_FILE.value = '';
         SIDEBAR_PREVIEW.style.display = 'none';
         SIDEBAR_PREVIEW_IMG.src = '';
         SIDEBAR_CLEAR.style.display = 'none';
+        SIDEBAR_TS_PREVIEW.style.display = 'none';
         SIDEBAR_OVERLAY.classList.remove('open');
         SIDEBAR.classList.remove('open');
         document.body.style.overflow = '';
@@ -1196,13 +1451,40 @@
             if (c.image_url) {
               imgHtml = '<div class="sidebar-comment-image"><img src="' + escapeHtml(c.image_url) + '" alt="comment image" loading="lazy" /></div>';
             }
+            var tsHtml = '';
+            if (c.timestamp_seconds !== null && c.timestamp_seconds !== undefined) {
+              tsHtml = '<button class="comment-timestamp-btn" data-ts="' + escapeHtml(String(c.timestamp_seconds)) + '">⏱ ' + escapeHtml(formatTime(c.timestamp_seconds)) + '</button> ';
+            }
             return '<div class="sidebar-comment-item">' +
               '<div class="sidebar-comment-author">' + escapeHtml(c.author) + '</div>' +
-              '<div class="sidebar-comment-body">' + escapeHtml(c.body) + '</div>' +
+              '<div class="sidebar-comment-body">' + tsHtml + escapeHtml(c.body) + '</div>' +
               imgHtml +
               '<div class="sidebar-comment-time">' + timeAgo(c.created_at) + '</div>' +
               '</div>';
           }).join('');
+
+          // Wire timestamp seek buttons
+          SIDEBAR_LIST.querySelectorAll('.comment-timestamp-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              var ts = parseFloat(btn.dataset.ts);
+              if (!Number.isFinite(ts)) return;
+              // If the sidebar's song isn't playing, play it first
+              if (currentSongId !== sidebarSongId) {
+                var listing = document.querySelector('.listing[data-song="' + sidebarSongId + '"]');
+                if (listing) {
+                  var playBtn = listing.querySelector('.card-play-btn');
+                  if (playBtn) playBtn.click();
+                }
+              }
+              // Seek after a short delay to let audio load
+              setTimeout(function() {
+                if (currentAudio) {
+                  currentAudio.currentTime = ts;
+                  if (currentAudio.paused) currentAudio.play().catch(function() {});
+                }
+              }, 100);
+            });
+          });
         } catch (e) {
           SIDEBAR_LIST.innerHTML = '<div class="sidebar-comment-empty">Failed to load comments.</div>';
         }
@@ -1214,12 +1496,13 @@
         var title  = listing.dataset.title;
         var cover  = listing.dataset.cover;
         var audio  = listing.querySelector('audio');
-        var playBtn = listing.querySelector('.card-play-btn');
-        var likeBtn = listing.querySelector('.rating-btn.like');
+        var playBtn    = listing.querySelector('.card-play-btn');
+        var likeBtn    = listing.querySelector('.rating-btn.like');
         var dislikeBtn = listing.querySelector('.rating-btn.dislike');
-        var likeCount = likeBtn.querySelector('.rating-count');
+        var likeCount    = likeBtn.querySelector('.rating-count');
         var dislikeCount = dislikeBtn.querySelector('.rating-count');
         var commentBtn = listing.querySelector('.card-comment-btn');
+        var shareBtn   = listing.querySelector('.card-share-btn');
 
         var myVote = getStoredVote(songId);
         if (myVote === 'like') likeBtn.classList.add('active');
@@ -1228,6 +1511,10 @@
         // ---------- audio playback ----------
         function handlePlayClick(e) {
           e.stopPropagation();
+          // Build queue on first play or when starting a new song
+          if (queue.length === 0 || !queue.includes(songId)) {
+            buildQueue(songId);
+          }
           playSong(audio, listing, songId, title, cover);
         }
 
@@ -1241,8 +1528,14 @@
             currentSongId = null;
             updateHeroPlayState(false);
             updateBottomPlayerPlayState(false);
-            BP.classList.remove('active');
             if (bpAnimFrame) cancelAnimationFrame(bpAnimFrame);
+            // Auto-advance queue
+            var nextIdx = queueIndex + 1;
+            if (nextIdx < queue.length) {
+              setTimeout(function() { playByQueueIndex(nextIdx); }, 300);
+            } else {
+              BP.classList.remove('active');
+            }
           }
           var bar = listing.querySelector('.card-progress-bar');
           if (bar) bar.style.width = '0%';
@@ -1308,6 +1601,12 @@
           e.stopPropagation();
           openSidebar(songId, title);
         });
+
+        // ---------- share ----------
+        shareBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          shareSong(songId);
+        });
       }
 
       // ---------- hero click ----------
@@ -1351,6 +1650,26 @@
         }
       });
 
+      BP_PREV_BTN.addEventListener('click', function() {
+        if (queue.length === 0) return;
+        var prevIdx = queueIndex - 1;
+        if (prevIdx < 0) prevIdx = queue.length - 1;
+        playByQueueIndex(prevIdx);
+      });
+
+      BP_NEXT_BTN.addEventListener('click', function() {
+        if (queue.length === 0) return;
+        var nextIdx = queueIndex + 1;
+        if (nextIdx >= queue.length) nextIdx = 0;
+        playByQueueIndex(nextIdx);
+      });
+
+      BP_SHUFFLE_BTN.addEventListener('click', function() {
+        isShuffled = !isShuffled;
+        BP_SHUFFLE_BTN.classList.toggle('active', isShuffled);
+        if (songsData.length > 0) buildQueue(currentSongId || songsData[0].id);
+      });
+
       BP_PROGRESS.addEventListener('pointerdown', function() { isBPSeeking = true; });
       BP_PROGRESS.addEventListener('pointerup', function() {
         isBPSeeking = false;
@@ -1376,6 +1695,23 @@
       // ---------- sidebar close ----------
       SIDEBAR_CLOSE.addEventListener('click', closeSidebar);
       SIDEBAR_OVERLAY.addEventListener('click', closeSidebar);
+
+      // ---------- sidebar timestamp ----------
+      SIDEBAR_ADD_TS.addEventListener('click', function() {
+        var ts = currentAudio && !currentAudio.paused ? currentAudio.currentTime : (currentAudio ? currentAudio.currentTime : null);
+        if (ts === null || !Number.isFinite(ts)) {
+          // No audio playing — just use 0
+          ts = 0;
+        }
+        sidebarTimestamp = ts;
+        SIDEBAR_TS_LABEL.textContent = formatTime(ts);
+        SIDEBAR_TS_PREVIEW.style.display = 'inline-flex';
+      });
+
+      SIDEBAR_TS_CLEAR.addEventListener('click', function() {
+        sidebarTimestamp = null;
+        SIDEBAR_TS_PREVIEW.style.display = 'none';
+      });
 
       // ---------- sidebar file handling ----------
       SIDEBAR_FILE.addEventListener('change', function() {
@@ -1434,15 +1770,23 @@
         try {
           await fetchJson('/api/comments', {
             method: 'POST',
-            body: JSON.stringify({ song_id: sidebarSongId, author: author, body: body, image_url: imageUrl || null }),
+            body: JSON.stringify({
+              song_id: sidebarSongId,
+              author: author,
+              body: body,
+              image_url: imageUrl || null,
+              timestamp_seconds: sidebarTimestamp,
+            }),
           });
           SIDEBAR_NAME.value = '';
           SIDEBAR_BODY.value = '';
           sidebarPendingFile = null;
+          sidebarTimestamp = null;
           SIDEBAR_FILE.value = '';
           SIDEBAR_PREVIEW_IMG.src = '';
           SIDEBAR_PREVIEW.style.display = 'none';
           SIDEBAR_CLEAR.style.display = 'none';
+          SIDEBAR_TS_PREVIEW.style.display = 'none';
           await loadSidebarComments(sidebarSongId);
         } catch (e) { /* ignore */ }
         SIDEBAR_SUBMIT.disabled = false;
@@ -1458,6 +1802,9 @@
           Object.keys(TAB_PAGES).forEach(function(key) {
             TAB_PAGES[key].classList.toggle('active', key === target);
           });
+          if (target === 'analytics' && !analyticsLoaded) {
+            loadAnalytics();
+          }
         });
       });
 
@@ -1465,16 +1812,118 @@
       SEARCH_INPUT.addEventListener('input', function() {
         var query = SEARCH_INPUT.value.trim().toLowerCase();
         var cards = document.querySelectorAll('.listing');
-        var hasVisible = false;
         cards.forEach(function(card) {
           var title = (card.dataset.title || '').toLowerCase();
           var match = !query || title.indexOf(query) !== -1;
           card.style.display = match ? '' : 'none';
-          if (match) hasVisible = true;
         });
-        // Hide hero when searching, show when cleared
         HERO_SEC.style.display = query ? 'none' : '';
       });
+
+      // ---------- analytics ----------
+      function renderBarChart(canvas, labels, values, color) {
+        var ctx = canvas.getContext('2d');
+        var dpr = window.devicePixelRatio || 1;
+        var w = canvas.offsetWidth;
+        var h = canvas.offsetHeight || 140;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        ctx.scale(dpr, dpr);
+
+        var padL = 8, padR = 8, padT = 12, padB = 28;
+        var chartW = w - padL - padR;
+        var chartH = h - padT - padB;
+        var max = Math.max(...values, 1);
+        var barCount = labels.length;
+        var gap = 2;
+        var barW = Math.max(2, (chartW - gap * (barCount - 1)) / barCount);
+
+        ctx.clearRect(0, 0, w, h);
+
+        // Gridlines
+        ctx.strokeStyle = 'rgba(38,48,85,0.8)';
+        ctx.lineWidth = 1;
+        for (var g = 0; g <= 4; g++) {
+          var gy = padT + chartH - (g / 4) * chartH;
+          ctx.beginPath(); ctx.moveTo(padL, gy); ctx.lineTo(padL + chartW, gy); ctx.stroke();
+        }
+
+        // Bars
+        values.forEach(function(val, i) {
+          var bh = Math.max(2, (val / max) * chartH);
+          var bx = padL + i * (barW + gap);
+          var by = padT + chartH - bh;
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.roundRect ? ctx.roundRect(bx, by, barW, bh, 2) : ctx.rect(bx, by, barW, bh);
+          ctx.fill();
+        });
+
+        // X labels — show first, middle, last
+        ctx.fillStyle = '#5f5a52';
+        ctx.font = '10px Karla, sans-serif';
+        ctx.textAlign = 'center';
+        var showIdx = [0, Math.floor(barCount / 2), barCount - 1];
+        showIdx.forEach(function(i) {
+          if (labels[i]) {
+            var lx = padL + i * (barW + gap) + barW / 2;
+            // Short label: show only day/month
+            var parts = labels[i].split('-');
+            var shortLabel = parts[1] + '/' + parts[2];
+            ctx.fillText(shortLabel, lx, h - 6);
+          }
+        });
+      }
+
+      async function loadAnalytics() {
+        analyticsLoaded = true;
+        try {
+          var data = await fetchJson('/api/analytics');
+
+          // Totals
+          document.getElementById('statTotalPlays').textContent = data.totals.plays;
+          document.getElementById('statTotalLikes').textContent = data.totals.likes;
+          document.getElementById('statTotalSongs').textContent = data.totals.songs;
+
+          // Timeline chart
+          var canvas = document.getElementById('analyticsTimelineChart');
+          var labels = data.timeline.map(function(t) { return t.date; });
+          var values = data.timeline.map(function(t) { return t.count; });
+          // Wait for layout
+          requestAnimationFrame(function() {
+            renderBarChart(canvas, labels, values, 'rgba(196,149,106,0.85)');
+          });
+
+          // Top tracks by plays
+          var byPlays = data.stats.slice().sort(function(a, b) { return b.plays - a.plays; }).slice(0, 8);
+          var maxPlays = Math.max(byPlays[0] ? byPlays[0].plays : 1, 1);
+          document.getElementById('analyticsTrackList').innerHTML = byPlays.map(function(s, i) {
+            var pct = Math.round((s.plays / maxPlays) * 100);
+            return '<div class="analytics-track-row">' +
+              '<span class="analytics-track-rank">' + (i + 1) + '</span>' +
+              '<span class="analytics-track-title">' + escapeHtml(s.title) + '</span>' +
+              '<div class="analytics-track-bar-wrap"><div class="analytics-track-bar" style="width:' + pct + '%"></div></div>' +
+              '<span class="analytics-track-count">' + s.plays + '</span>' +
+            '</div>';
+          }).join('') || '<div class="analytics-loading">No plays yet.</div>';
+
+          // Top tracks by likes
+          var byLikes = data.stats.slice().sort(function(a, b) { return b.likes - a.likes; }).slice(0, 8);
+          var maxLikes = Math.max(byLikes[0] ? byLikes[0].likes : 1, 1);
+          document.getElementById('analyticsLikeList').innerHTML = byLikes.map(function(s, i) {
+            var pct = Math.round((s.likes / maxLikes) * 100);
+            return '<div class="analytics-track-row">' +
+              '<span class="analytics-track-rank">' + (i + 1) + '</span>' +
+              '<span class="analytics-track-title">' + escapeHtml(s.title) + '</span>' +
+              '<div class="analytics-track-bar-wrap"><div class="analytics-track-bar" style="width:' + pct + '%"></div></div>' +
+              '<span class="analytics-track-count">♡ ' + s.likes + '</span>' +
+            '</div>';
+          }).join('') || '<div class="analytics-loading">No likes yet.</div>';
+
+        } catch (e) {
+          document.getElementById('analyticsTrackList').innerHTML = '<div class="analytics-loading">Failed to load stats.</div>';
+        }
+      }
 
       // ---------- main init ----------
       async function init() {
@@ -1487,6 +1936,7 @@
           }
 
           songsData = songs;
+          buildQueue(songs[0].id);
 
           // Songs already ordered by created_at desc from API (most recent first)
           LISTINGS_EL.innerHTML = songs.map(songCardHtml).join('');
@@ -1507,6 +1957,20 @@
                 heroAudio.currentTime = 0;
                 updateHeroPlayState(false);
               });
+            }
+          }
+
+          // Deep link: ?song=<id>
+          var params = new URLSearchParams(location.search);
+          var linkedSong = params.get('song');
+          if (linkedSong) {
+            var targetListing = document.querySelector('.listing[data-song="' + CSS.escape(linkedSong) + '"]');
+            if (targetListing) {
+              setTimeout(function() {
+                targetListing.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                var playBtn = targetListing.querySelector('.card-play-btn');
+                if (playBtn) playBtn.click();
+              }, 400);
             }
           }
 

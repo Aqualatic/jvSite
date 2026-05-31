@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       if (!songId) return sendResponse(res, 400, { error: 'Missing or invalid song_id' });
 
       const rows = await supabaseRestFetch(
-        `/comments?select=author,body,image_url,created_at&song_id=eq.${encodeURIComponent(songId)}&order=created_at.desc&limit=100`,
+        `/comments?select=author,body,image_url,timestamp_seconds,created_at&song_id=eq.${encodeURIComponent(songId)}&order=created_at.desc&limit=100`,
         { method: 'GET' },
       );
 
@@ -25,12 +25,27 @@ export default async function handler(req, res) {
       const imageUrl = body.image_url ? String(body.image_url).trim().slice(0, 1000) : null;
       if (!author || !text) return sendResponse(res, 400, { error: 'Missing author or body' });
 
+      // timestamp_seconds: optional integer, null if not provided
+      let timestampSeconds = null;
+      if (body.timestamp_seconds !== null && body.timestamp_seconds !== undefined) {
+        const ts = Number(body.timestamp_seconds);
+        if (Number.isFinite(ts) && ts >= 0) {
+          timestampSeconds = Math.floor(ts);
+        }
+      }
+
       const inserted = await supabaseRestFetch('/comments', {
         method: 'POST',
         headers: {
           Prefer: 'return=representation',
         },
-        body: JSON.stringify([{ song_id: songId, author, body: text, image_url: imageUrl }]),
+        body: JSON.stringify([{
+          song_id: songId,
+          author,
+          body: text,
+          image_url: imageUrl,
+          timestamp_seconds: timestampSeconds,
+        }]),
       });
 
       const row = Array.isArray(inserted) && inserted.length > 0 ? inserted[0] : null;
