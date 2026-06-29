@@ -307,6 +307,138 @@
     .bottom-player-btn.active svg { fill: var(--accent-amber); }
 
     /* ============================================================
+       PRIVATE / PASSWORD PROTECTED PAGE
+       ============================================================ */
+    .private-page {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .private-prompt {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .private-prompt-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 36px;
+      text-align: center;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 12px 40px var(--shadow);
+    }
+
+    .private-lock-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      filter: grayscale(0.2);
+    }
+
+    .private-prompt-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .private-prompt-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .private-password-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .private-password-form input {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color var(--transition);
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+
+    .private-password-form input:focus {
+      border-color: var(--accent-amber);
+    }
+
+    .private-password-form input::placeholder {
+      color: var(--text-dim);
+      letter-spacing: 0;
+    }
+
+    .private-submit-btn {
+      background: var(--accent-amber);
+      border: none;
+      color: var(--bg-primary);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: opacity var(--transition), transform var(--transition);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .private-submit-btn:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+
+    .private-error {
+      font-size: 0.8rem;
+      margin-top: 12px;
+      color: #e57373;
+    }
+
+    .private-content {
+      width: 100%;
+    }
+
+    .private-video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 32px var(--shadow);
+    }
+
+    .private-video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* ============================================================
        ABOUT ME page (unchanged, kept here for completeness)
        ============================================================ */
     .about-card {
@@ -894,6 +1026,7 @@
         <button class="nav-tab active" data-tab="home">Home</button>
         <button class="nav-tab" data-tab="analytics">Stats</button>
         <button class="nav-tab" data-tab="about">About Me</button>
+        <button class="nav-tab" data-tab="private">🔒 Private</button>
       </nav>
 
       <!-- SEARCH -->
@@ -979,6 +1112,40 @@
             If something here connects with you, drop a comment on the track. I read every 
             one, and it genuinely means a lot. Thanks for listening.
           </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PRIVATE (Password Protected) -->
+    <div class="tab-page" id="tab-private">
+      <div class="private-page">
+        <!-- Password Prompt -->
+        <div class="private-prompt" id="privatePrompt">
+          <div class="private-prompt-card">
+            <div class="private-lock-icon">🔒</div>
+            <h2>Private Content</h2>
+            <p>This section is password protected. Enter the password to continue.</p>
+            <form class="private-password-form" id="privatePasswordForm">
+              <input type="password" id="privatePasswordInput" placeholder="Enter password" autocomplete="off" />
+              <button type="submit" class="private-submit-btn">Unlock</button>
+            </form>
+            <p class="private-error" id="privateError" style="display:none;color:#e57373;">Incorrect password. Please try again.</p>
+          </div>
+        </div>
+        <!-- Protected Content (hidden until password is entered) -->
+        <div class="private-content" id="privateContent" style="display:none;">
+          <div class="container">
+            <h2 class="section-title">Secret Content</h2>
+            <div class="private-video-wrapper">
+              <iframe 
+                id="privateVideo"
+                src="https://www.youtube.com/embed/PEIvcxSO9zQ" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1109,7 +1276,21 @@
         home:      document.getElementById('tab-home'),
         analytics: document.getElementById('tab-analytics'),
         about:     document.getElementById('tab-about'),
+        private:   document.getElementById('tab-private'),
       };
+
+      // Private tab password protection
+      const PRIVATE_PROMPT = document.getElementById('privatePrompt');
+      const PRIVATE_CONTENT = document.getElementById('privateContent');
+      const PRIVATE_PASSWORD_FORM = document.getElementById('privatePasswordForm');
+      const PRIVATE_PASSWORD_INPUT = document.getElementById('privatePasswordInput');
+      const PRIVATE_ERROR = document.getElementById('privateError');
+      const PRIVATE_AUTH_KEY = 'jvhub.private.unlocked';
+      
+      // Set your password here
+      const PRIVATE_PASSWORD = 'JOYURI';
+      
+      let privateUnlocked = false;
 
       // Icons
       const ICON_PLAY  = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
@@ -1805,8 +1986,82 @@
           if (target === 'analytics' && !analyticsLoaded) {
             loadAnalytics();
           }
+          if (target === 'private' && privateUnlocked && !privateLoaded) {
+            loadPrivateSongs();
+          }
         });
       });
+
+      // ---------- private tab password protection ----------
+      function checkPrivateAuth() {
+        try {
+          var unlocked = localStorage.getItem(PRIVATE_AUTH_KEY);
+          if (unlocked === 'true') {
+            privateUnlocked = true;
+            PRIVATE_PROMPT.style.display = 'none';
+            PRIVATE_CONTENT.style.display = 'block';
+            if (!privateLoaded) {
+              loadPrivateSongs();
+            }
+          } else {
+            privateUnlocked = false;
+            PRIVATE_PROMPT.style.display = 'flex';
+            PRIVATE_CONTENT.style.display = 'none';
+          }
+        } catch (e) {
+          privateUnlocked = false;
+          PRIVATE_PROMPT.style.display = 'flex';
+          PRIVATE_CONTENT.style.display = 'none';
+        }
+      }
+
+      function unlockPrivate(password) {
+        if (password === PRIVATE_PASSWORD) {
+          privateUnlocked = true;
+          PRIVATE_ERROR.style.display = 'none';
+          PRIVATE_PROMPT.style.display = 'none';
+          PRIVATE_CONTENT.style.display = 'block';
+          try {
+            localStorage.setItem(PRIVATE_AUTH_KEY, 'true');
+          } catch (e) { /* ignore */ }
+          if (!privateLoaded) {
+            loadPrivateSongs();
+          }
+        } else {
+          PRIVATE_ERROR.style.display = 'block';
+          PRIVATE_PASSWORD_INPUT.value = '';
+          PRIVATE_PASSWORD_INPUT.focus();
+        }
+      }
+
+      async function loadPrivateSongs() {
+        if (privateLoaded) return;
+        privateLoaded = true;
+        try {
+          var data = await fetchJson('/api/songs?private=true');
+          var songs = (data && data.songs) || [];
+          if (!Array.isArray(songs) || songs.length === 0) {
+            PRIVATE_LISTINGS.innerHTML = '<div class="sidebar-comment-empty">No private tracks found.</div>';
+            return;
+          }
+          privateSongsData = songs;
+          PRIVATE_LISTINGS.innerHTML = songs.map(songCardHtml).join('');
+          PRIVATE_LISTINGS.querySelectorAll('.listing').forEach(wireListingData);
+        } catch (e) {
+          PRIVATE_LISTINGS.innerHTML = '<div class="sidebar-comment-empty">Failed to load private tracks.</div>';
+        }
+      }
+
+      PRIVATE_PASSWORD_FORM.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var password = PRIVATE_PASSWORD_INPUT.value;
+        if (password) {
+          unlockPrivate(password);
+        }
+      });
+
+      // Check private tab auth on page load
+      checkPrivateAuth();
 
       // ---------- search ----------
       SEARCH_INPUT.addEventListener('input', function() {

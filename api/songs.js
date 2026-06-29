@@ -3,10 +3,18 @@ import { getPublicUrl, DEFAULT_COVER_SVG } from './_lib/utils.js';
 
 export default async function handler(req, res) {
   try {
-    const rows = await supabaseRestFetch(
-      '/songs?select=id,title,audio_path,artwork_path&order=created_at.desc',
-      { method: 'GET' },
-    );
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const isPrivate = url.searchParams.get('private') === 'true';
+
+    let query = '/songs?select=id,title,audio_path,artwork_path&order=created_at.desc';
+    
+    if (isPrivate) {
+      query += '&is_private=eq.true';
+    } else {
+      query += '&is_private=eq.false';
+    }
+
+    const rows = await supabaseRestFetch(query, { method: 'GET' });
 
     const songs = (Array.isArray(rows) ? rows : []).map((row) => ({
       id: row.id,
