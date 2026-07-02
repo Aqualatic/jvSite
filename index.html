@@ -1095,22 +1095,15 @@
       <div class="about-page">
         <div class="about-card">
           <h2>About Me</h2>
-          <div class="about-sub">— the person behind the mask</div>
+          <div class="about-sub">noob</div>
           <p>
-            This is a little corner of the internet where I share the sounds I've made, 
-            the covers I've recorded, and the tracks that mean something to me. It's not 
-            about algorithms or play counts it's just music, made by one person, for 
-            whoever wants to listen.
+            I
           </p>
           <p>
-            I started making music as a way to unwind, and it slowly became something I 
-            couldn't imagine life without. Everything here was recorded in my own space, 
-            with whatever gear I had at the time. You'll hear imperfections, and that's 
-            kind of the point it's honest.
+            dont
           </p>
           <p>
-            If something here connects with you, drop a comment on the track. I read every 
-            one, and it genuinely means a lot. Thanks for listening.
+            know
           </p>
         </div>
       </div>
@@ -1717,6 +1710,9 @@
             } else {
               BP.classList.remove('active');
             }
+          } else {
+            // If this audio ended but wasn't the current one, still update bottom player if it was playing
+            updateBottomPlayerPlayState(false);
           }
           var bar = listing.querySelector('.card-progress-bar');
           if (bar) bar.style.width = '0%';
