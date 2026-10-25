@@ -1,5 +1,6 @@
 import { getSupabaseRestConfig } from './_lib/supabaseRest.js';
 import { parseJsonBody, sendResponse } from './_lib/utils.js';
+import { requireFriendsAudience } from './_lib/audience.js';
 
 const BUCKET = 'media';
 const SUBFOLDER = 'comment-uploads';
@@ -37,6 +38,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    if (!requireFriendsAudience(req, res)) return;
     const body = parseBase64Body(req);
     if (!body) {
       return sendResponse(res, 400, { error: 'Missing dataUrl or filename' });
@@ -87,6 +89,6 @@ export default async function handler(req, res) {
     return sendResponse(res, 200, { ok: true, url: publicUrl });
   } catch (err) {
     console.error('Upload handler error:', err);
-    return sendResponse(res, 500, { error: err?.message || 'Server error' });
+    return sendResponse(res, err?.statusCode || 500, { error: err?.message || 'Server error' });
   }
 }

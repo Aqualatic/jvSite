@@ -1,8 +1,16 @@
 import { supabaseRestFetch } from './_lib/supabaseRest.js';
-import { getPublicUrl, DEFAULT_COVER_SVG } from './_lib/utils.js';
+import { getPublicUrl, DEFAULT_COVER_SVG, sendResponse } from './_lib/utils.js';
+import { getAudience } from './_lib/audience.js';
+import { DEMO_SONGS } from '../assets/demo/catalog.js';
 
 export default async function handler(req, res) {
   try {
+    if (req.method !== 'GET') {
+      res.setHeader('Allow', 'GET');
+      return sendResponse(res, 405, { error: 'Method not allowed' });
+    }
+    if (getAudience(req) === 'demo') return sendResponse(res, 200, { songs: DEMO_SONGS });
+
     const url = new URL(req.url, `http://${req.headers.host}`);
     const isPrivate = url.searchParams.get('private') === 'true';
 
@@ -23,9 +31,9 @@ export default async function handler(req, res) {
       coverSrc: getPublicUrl('art', row.artwork_path) ?? DEFAULT_COVER_SVG,
     }));
 
-    res.status(200).json({ songs });
+    return sendResponse(res, 200, { songs });
   } catch (error) {
     console.error('Error fetching songs:', error);
-    res.status(500).json({ error: 'Failed to fetch songs' });
+    return sendResponse(res, error.statusCode || 500, { error: error.statusCode === 400 ? error.message : 'Failed to fetch songs' });
   }
 }

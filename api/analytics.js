@@ -1,5 +1,7 @@
 import { supabaseRestFetch } from './_lib/supabaseRest.js';
 import { sendResponse } from './_lib/utils.js';
+import { getAudience } from './_lib/audience.js';
+import { DEMO_SONGS } from '../assets/demo/catalog.js';
 
 export default async function handler(req, res) {
   try {
@@ -9,7 +11,7 @@ export default async function handler(req, res) {
     }
 
     // Fetch songs, play counts, and ratings in parallel
-    const [songs, plays, ratings] = await Promise.all([
+    const [songs, plays, ratings] = getAudience(req) === 'demo' ? [DEMO_SONGS, [], []] : await Promise.all([
       supabaseRestFetch('/songs?select=id,title&order=created_at.desc', { method: 'GET' }),
       supabaseRestFetch('/plays?select=song_id,played_at', { method: 'GET' }),
       supabaseRestFetch('/ratings?select=song_id,likes,dislikes', { method: 'GET' }),

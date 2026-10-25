@@ -1,8 +1,10 @@
 import { supabaseRestFetch } from './_lib/supabaseRest.js';
 import { parseJsonBody, getSongId, clampDelta, sendResponse } from './_lib/utils.js';
+import { requireFriendsAudience } from './_lib/audience.js';
 
 export default async function handler(req, res) {
   try {
+    if (!requireFriendsAudience(req, res)) return;
     if (req.method === 'GET') {
       const songId = getSongId(req);
       if (!songId) return sendResponse(res, 400, { error: 'Missing or invalid song_id' });

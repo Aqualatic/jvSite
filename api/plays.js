@@ -1,8 +1,10 @@
 import { supabaseRestFetch } from './_lib/supabaseRest.js';
 import { parseJsonBody, validateSongId, sendResponse } from './_lib/utils.js';
+import { requireFriendsAudience } from './_lib/audience.js';
 
 export default async function handler(req, res) {
   try {
+    if (!requireFriendsAudience(req, res)) return;
     if (req.method === 'POST') {
       const body = parseJsonBody(req);
       const songId = validateSongId(body.song_id);
