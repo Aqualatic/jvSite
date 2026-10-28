@@ -1,4 +1,4 @@
-# JVHub
+# MusicDistro
 
 Static frontend backed by Supabase (Postgres), deployed on Vercel. Song metadata is served from the `media/` directory; ratings and comments are persisted server-side.
 
